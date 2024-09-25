@@ -4,12 +4,10 @@ import { useState } from "react";
 import useForm from "../hooks/useForm";
 import { ToastContainer, toast } from "react-toastify";
 import Button from "../components/Button";
-import { useNavigate } from "react-router-dom";
 import { LoadingDialog } from "../components/Dialog";
 import useFetch from "../hooks/useFetch";
 
 const Login = () => {
-  const navigate = useNavigate();
   const { post, loading } = useFetch();
   const [showPassword, setShowPassword] = useState(false);
 
