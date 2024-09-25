@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./views/Login";
 import Loading from "./views/Loading";
-import User from "./views/User";
 import useFetch from "./hooks/useFetch";
 import NotFound from "./views/NotFound";
+import Home from "./views/Home";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -34,7 +34,7 @@ const App = () => {
             <Routes>
               {isAuthenticated ? (
                 <>
-                  <Route path="/" element={<User />} />
+                  <Route path="/" element={<Home />} />
                 </>
               ) : (
                 <>
