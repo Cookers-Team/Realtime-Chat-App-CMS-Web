@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 const Button = ({ onPress, title, color, icon: Icon }: any) => {
   return (
     <button

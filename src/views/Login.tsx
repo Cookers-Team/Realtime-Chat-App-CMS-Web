@@ -1,18 +1,17 @@
 import { LockIcon, MailIcon } from "lucide-react";
 import InputField from "../components/InputField";
 import { useState } from "react";
-import { useLoading } from "../hooks/useLoading";
 import useForm from "../hooks/useForm";
 import { ToastContainer, toast } from "react-toastify";
-import { remoteUrl } from "../types/constant";
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
 import { LoadingDialog } from "../components/Dialog";
+import useFetch from "../hooks/useFetch";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { post, loading } = useFetch();
   const [showPassword, setShowPassword] = useState(false);
-  const { isLoading, showLoading, hideLoading } = useLoading();
 
   const validate = (form: any) => {
     const newErrors: any = {};
@@ -33,31 +32,13 @@ const Login = () => {
 
   const handleSubmit = async () => {
     if (isValidForm()) {
-      showLoading();
-      try {
-        const response = await fetch(`${remoteUrl}/v1/user/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: form.email,
-            password: form.password,
-          }),
-        });
-        if (!response.ok) {
-          const errorData = await response.json();
-          toast.error(errorData.message);
-          return;
-        }
-        const data = await response.json();
-        await localStorage.setItem("accessToken", data.data.accessToken);
+      const res = await post("/v1/user/login", form);
+      if (res.result) {
+        await localStorage.setItem("accessToken", res.data.accessToken);
         toast.success("Đăng nhập thành công");
-        navigate("/home");
-      } catch (error: any) {
-        toast.error(error.message);
-      } finally {
-        hideLoading();
+        window.location.reload();
+      } else {
+        toast.error(res.message);
       }
     }
   };
@@ -89,7 +70,7 @@ const Login = () => {
         />
         <Button title="ĐĂNG NHẬP" color="royalblue" onPress={handleSubmit} />
       </div>
-      <LoadingDialog isVisible={isLoading} />
+      <LoadingDialog isVisible={loading} />
       <ToastContainer />
     </div>
   );

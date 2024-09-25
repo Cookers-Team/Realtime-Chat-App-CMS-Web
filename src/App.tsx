@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./views/Login";
 import Loading from "./views/Loading";
 import User from "./views/User";
@@ -32,10 +32,15 @@ const App = () => {
         <>
           <BrowserRouter>
             <Routes>
-              <Route
-                path="/"
-                element={isAuthenticated ? <User /> : <Login />}
-              />
+              {isAuthenticated ? (
+                <>
+                  <Route path="/" element={<User />} />
+                </>
+              ) : (
+                <>
+                  <Route path="/" element={<Login />} />
+                </>
+              )}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
