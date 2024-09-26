@@ -10,6 +10,8 @@ const Table = ({
   onView,
   onEdit,
   onDelete,
+  disableEditCondition,
+  disableDeleteCondition,
 }: any) => {
   return (
     <div className="overflow-x-auto">
@@ -49,16 +51,30 @@ const Table = ({
                   )}
                   {onEdit && (
                     <button
-                      className="text-blue-500 p-1"
+                      className={`p-1 ${
+                        disableEditCondition && disableEditCondition(item)
+                          ? "text-gray-500 cursor-not-allowed"
+                          : "text-blue-500"
+                      }`}
                       onClick={() => onEdit(item.id)}
+                      disabled={
+                        disableEditCondition && disableEditCondition(item)
+                      }
                     >
                       <PencilIcon size={16} />
                     </button>
                   )}
                   {onDelete && (
                     <button
-                      className="text-red-500 p-1"
+                      className={`p-1 ${
+                        disableDeleteCondition && disableDeleteCondition(item)
+                          ? "text-gray-500 cursor-not-allowed"
+                          : "text-red-500"
+                      }`}
                       onClick={() => onDelete(item.id)}
+                      disabled={
+                        disableDeleteCondition && disableDeleteCondition(item)
+                      }
                     >
                       <TrashIcon size={16} />
                     </button>

@@ -1,9 +1,11 @@
 import { PlusIcon, SearchIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import Table from "../components/Table";
-import { LoadingDialog } from "../components/Dialog";
+import { ConfimationDialog, LoadingDialog } from "../components/Dialog";
 import useFetch from "../hooks/useFetch";
 import userImg from "../assets/user_icon.png";
+import useDialog from "../hooks/useDialog";
+import { toast } from "react-toastify";
 
 const SearchBar = () => (
   <div className="flex items-center justify-between mb-4">
@@ -51,6 +53,8 @@ const SearchBar = () => (
 );
 
 const User = () => {
+  const { isDialogVisible, showDialog, hideDialog } = useDialog();
+  const [deleteId, setDeleteId] = useState(null);
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -98,22 +102,40 @@ const User = () => {
       align: "center",
     },
   ];
-  const { get, loading } = useFetch();
+  const { get, del, loading } = useFetch();
+
+  const getData = async () => {
+    const res = await get("/v1/user/list", {
+      page: currentPage,
+      size: itemsPerPage,
+    });
+    setData(res.data.content);
+    setTotalPages(res.data.totalPages);
+  };
 
   useEffect(() => {
-    const getData = async () => {
-      const res = await get("/v1/user/list", {
-        page: currentPage,
-        size: itemsPerPage,
-      });
-      setData(res.data.content);
-      setTotalPages(res.data.totalPages);
-    };
     getData();
   }, [currentPage]);
 
   const handlePageChange = (pageNumber: any) => {
     setCurrentPage(pageNumber);
+  };
+
+  const handleDelete = async () => {
+    hideDialog();
+    const res = await del("/v1/user/delete/" + deleteId);
+    if (res.result) {
+      toast.success("Xóa thành công");
+      setCurrentPage(0);
+      getData();
+    } else {
+      toast.error(res.message);
+    }
+  };
+
+  const handleDeleteDialog = (id: any) => {
+    setDeleteId(id);
+    showDialog();
   };
 
   return (
@@ -127,13 +149,24 @@ const User = () => {
         onPageChange={handlePageChange}
         totalPages={totalPages}
         onEdit={(id: any) => {
-          console.log("edited" + id);
+          console.log(id);
         }}
         onDelete={(id: any) => {
-          console.log("deleted" + id);
+          handleDeleteDialog(id);
         }}
+        disableEditCondition={(item: any) => item.isSuperAdmin}
+        disableDeleteCondition={(item: any) => item.isSuperAdmin}
       />
       <LoadingDialog isVisible={loading} />
+      <ConfimationDialog
+        isVisible={isDialogVisible}
+        title="Xóa người dùng"
+        message="Bạn có chắc muốn xóa người dùng này?"
+        onConfirm={handleDelete}
+        confirmText="Xóa"
+        onCancel={hideDialog}
+        color="red"
+      />
     </>
   );
 };
