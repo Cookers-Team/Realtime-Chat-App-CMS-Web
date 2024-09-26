@@ -1,10 +1,9 @@
 import { PlusIcon, SearchIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import Table from "../components/Table";
-import { ConfimationDialog, LoadingDialog } from "../components/Dialog";
+import { LoadingDialog } from "../components/Dialog";
 import useFetch from "../hooks/useFetch";
 import userImg from "../assets/user_icon.png";
-import useDialog from "../hooks/useDialog";
 
 const SearchBar = () => (
   <div className="flex items-center justify-between mb-4">
@@ -99,7 +98,7 @@ const User = () => {
       align: "center",
     },
   ];
-  const { get, post, loading } = useFetch();
+  const { get, loading } = useFetch();
 
   useEffect(() => {
     const getData = async () => {
@@ -116,8 +115,6 @@ const User = () => {
   const handlePageChange = (pageNumber: any) => {
     setCurrentPage(pageNumber);
   };
-
-
 
   return (
     <>

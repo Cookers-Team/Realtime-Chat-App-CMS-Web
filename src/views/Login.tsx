@@ -30,7 +30,7 @@ const Login = () => {
 
   const handleSubmit = async () => {
     if (isValidForm()) {
-      const res = await post("/v1/user/login", form);
+      const res = await post("/v1/user/login-admin", form);
       if (res.result) {
         await localStorage.setItem("accessToken", res.data.accessToken);
         toast.success("Đăng nhập thành công");
