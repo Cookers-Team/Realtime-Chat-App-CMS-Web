@@ -11,10 +11,17 @@ import User from "./User";
 import Post from "./Post";
 import Role from "./Role";
 import useFetch from "../hooks/useFetch";
-import { LoadingDialog } from "../components/Dialog";
+import { ConfimationDialog, LoadingDialog } from "../components/Dialog";
 import { ToastContainer } from "react-toastify";
+import useDialog from "../hooks/useDialog";
 
-const Sidebar = ({ menuItems, activeItem, onMenuItemClick, profile }: any) => (
+const Sidebar = ({
+  menuItems,
+  activeItem,
+  onMenuItemClick,
+  profile,
+  onLogOut,
+}: any) => (
   <div className="w-100 h-screen flex flex-col">
     <div className="w-full bg-gray-900 text-white flex-none flex flex-col">
       <div className="flex flex-col items-center m-2">
@@ -47,7 +54,10 @@ const Sidebar = ({ menuItems, activeItem, onMenuItemClick, profile }: any) => (
         </ul>
       </nav>
       <div className="mt-auto p-3">
-        <button className="w-full bg-red-600 text-white rounded-lg hover:bg-red-800 transition-colors p-2">
+        <button
+          className="w-full bg-red-600 text-white rounded-lg hover:bg-red-800 transition-colors p-2"
+          onClick={onLogOut}
+        >
           <div className="flex items-center justify-center">
             <LogOutIcon size={20} />
             <span className="ml-2">Đăng xuất</span>
@@ -59,12 +69,23 @@ const Sidebar = ({ menuItems, activeItem, onMenuItemClick, profile }: any) => (
 );
 
 const Home = () => {
+  const { isDialogVisible, showDialog, hideDialog } = useDialog();
   const [activeItem, setActiveItem] = useState("user");
   const { get, loading } = useFetch();
   const [profile, setProfile] = useState({
     displayName: "Đang tải",
     avatarUrl: null,
   });
+
+  const handleLogout = () => {
+    hideDialog();
+    localStorage.removeItem("accessToken");
+    window.location.reload();
+  };
+
+  const handleLogoutDialog = () => {
+    showDialog();
+  };
 
   useEffect(() => {
     const getProfile = async () => {
@@ -108,10 +129,20 @@ const Home = () => {
         activeItem={activeItem}
         onMenuItemClick={setActiveItem}
         profile={profile}
+        onLogOut={handleLogoutDialog}
       />
       <div className="flex-grow p-6">{renderContent()}</div>
       <LoadingDialog isVisible={loading} />
       <ToastContainer />
+      <ConfimationDialog
+        isVisible={isDialogVisible}
+        title="Đăng xuất"
+        message="Bạn có chắc chắn muốn đăng xuất?"
+        onConfirm={handleLogout}
+        confirmText="Đăng xuất"
+        onCancel={hideDialog}
+        color="red"
+      />
     </div>
   );
 };
