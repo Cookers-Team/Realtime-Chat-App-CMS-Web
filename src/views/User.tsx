@@ -1,13 +1,9 @@
-import {
-  PlusIcon,
-  ChevronRightIcon,
-  ChevronLeftIcon,
-  SearchIcon,
-  PencilIcon,
-  TrashIcon,
-} from "lucide-react";
-import { useState } from "react";
-import userImage from "../assets/user_icon.png";
+import { PlusIcon, SearchIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import Table from "../components/Table";
+import { LoadingDialog } from "../components/Dialog";
+import useFetch from "../hooks/useFetch";
+import userImg from "../assets/user_icon.png";
 
 const SearchBar = () => (
   <div className="flex items-center justify-between mb-4">
@@ -54,169 +50,67 @@ const SearchBar = () => (
   </div>
 );
 
-const Pagination = ({ currentPage, totalPages, onPageChange }: any) => {
-  const pageNumbers: any = [];
-  const maxVisiblePages = 5;
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
-  }
-  const renderPageNumbers = () => {
-    if (totalPages <= maxVisiblePages) {
-      return pageNumbers.map((number: any) => (
-        <button
-          key={number}
-          onClick={() => onPageChange(number)}
-          className={`w-8 h-8 mx-1 rounded-lg transition-colors duration-200 ${
-            currentPage === number
-              ? "bg-blue-500 text-white"
-              : "bg-gray-100 text-gray-700 hover:bg-blue-100"
-          }`}
-        >
-          {number}
-        </button>
-      ));
-    }
-    const leftSide = Math.max(currentPage - Math.floor(maxVisiblePages / 2), 1);
-    const rightSide = Math.min(leftSide + maxVisiblePages - 1, totalPages);
-    const items = [];
-    if (leftSide > 1) {
-      items.push(1);
-      if (leftSide > 2) {
-        items.push("...");
-      }
-    }
-    for (let i = leftSide; i <= rightSide; i++) {
-      items.push(i);
-    }
-    if (rightSide < totalPages) {
-      if (rightSide < totalPages - 1) {
-        items.push("...");
-      }
-      items.push(totalPages);
-    }
-    return items.map((item, index) => {
-      if (item === "...") {
-        return (
-          <span
-            key={index}
-            className="w-8 h-8 mx-1 text-gray-700 text-center flex items-center justify-center"
-          >
-            ...
-          </span>
-        );
-      }
-      return (
-        <button
-          key={index}
-          onClick={() => onPageChange(item)}
-          className={`w-8 h-8 mx-1 rounded-lg transition-colors duration-200 ${
-            currentPage === item
-              ? "bg-blue-500 text-white"
-              : "bg-gray-100 text-gray-700 hover:bg-blue-100"
-          }`}
-        >
-          {item}
-        </button>
-      );
-    });
-  };
-  return (
-    <div className="flex justify-center items-center mt-4">
-      <button
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className={`w-8 h-8 rounded bg-gray-100 mr-2 flex items-center justify-center ${
-          currentPage === 1 ? "cursor-not-allowed opacity-50" : ""
-        }`}
-      >
-        <ChevronLeftIcon size={20} />
-      </button>
-      {renderPageNumbers()}
-      <button
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className={`w-8 h-8 rounded bg-gray-100 ml-2 flex items-center justify-center ${
-          currentPage === totalPages ? "cursor-not-allowed opacity-50" : ""
-        }`}
-      >
-        <ChevronRightIcon size={20} />
-      </button>
-    </div>
-  );
-};
-
-const Table = ({ data, currentPage, onPageChange, totalPages }: any) => (
-  <div className="overflow-x-auto">
-    <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
-      <thead>
-        <tr className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
-          <th className="p-4 text-center">#</th>
-          <th className="p-4 text-center">Tên</th>
-          <th className="p-4 text-center whitespace-nowrap">Created Date</th>
-          <th className="p-4 text-center whitespace-nowrap">Trạng thái</th>
-          <th className="p-4 text-center whitespace-nowrap">Hành động</th>
-        </tr>
-      </thead>
-      <tbody className="text-gray-600 font-light">
-        {data.map((item: any) => (
-          <tr
-            key={item.id}
-            className="border-b hover:bg-blue-100 transition-colors duration-200"
-          >
-            <td className="p-4">
-              <div className="flex justify-center">
-                <img src={userImage} className="h-9 rounded-full" />
-              </div>
-            </td>
-            <td className="p-4 text-center">{item.name}</td>
-            <td className="p-4 text-center">{item.createdDate}</td>
-            <td className="p-4 text-center">
-              <span className="bg-green-100 text-green-800 px-2 py-1 rounded-md">
-                {item.status}
-              </span>
-            </td>
-            <td className="p-4 text-center">
-              <div className="flex justify-center space-x-2">
-                <button className="text-blue-500 p-1">
-                  <PencilIcon size={16} />
-                </button>
-                <button className="text-red-500 p-1">
-                  <TrashIcon size={16} />
-                </button>
-              </div>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-    <Pagination
-      currentPage={currentPage}
-      totalPages={totalPages}
-      onPageChange={onPageChange}
-    />
-  </div>
-);
-
 const User = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const itemsPerPage = 10;
-  const totalItems = 300;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const columns = [
+    {
+      label: "Ảnh",
+      accessor: "avatarUrl",
+      align: "left",
+      render: (item: any) => (
+        <img
+          className="w-10 h-10 rounded-full"
+          src={item.avatarUrl ? item.avatarUrl : userImg}
+        ></img>
+      ),
+    },
+    { label: "Tên hiển thị", accessor: "displayName", align: "left" },
+    { label: "Email", accessor: "email", align: "left" },
+    { label: "Số điện thoại", accessor: "phone", align: "left" },
+    {
+      label: "Vai trò",
+      accessor: "role",
+      align: "center",
+      render: (item: any) => <span>{item.role.name}</span>,
+    },
+    {
+      label: "Trạng thái",
+      accessor: "status",
+      align: "center",
+      render: (item: any) => (
+        <span
+          className={`px-2 py-1 rounded-md ${
+            item.status === 1
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800"
+          }`}
+        >
+          {item.status === 1 ? "Hoạt động" : "Chưa kích hoạt"}
+        </span>
+      ),
+    },
+    {
+      label: "Ngày tạo",
+      accessor: "createdAt",
+      align: "center",
+    },
+  ];
+  const { get, post, loading } = useFetch();
 
-  // Simulated data for the table
-  const generateData = ({ start, end }: any) => {
-    return Array.from({ length: end - start + 1 }, (_, index) => ({
-      id: start + index,
-      name: `Item ${start + index}`,
-      createdDate: "12.08.2024",
-      status: "Active",
-    }));
-  };
-
-  const currentData = generateData({
-    start: (currentPage - 1) * itemsPerPage + 1,
-    end: currentPage * itemsPerPage,
-  });
+  useEffect(() => {
+    const getData = async () => {
+      const res = await get("/v1/user/list", {
+        page: currentPage,
+        size: itemsPerPage,
+      });
+      setData(res.data.content);
+      setTotalPages(res.data.totalPages);
+    };
+    getData();
+  }, [currentPage]);
 
   const handlePageChange = (pageNumber: any) => {
     setCurrentPage(pageNumber);
@@ -226,12 +120,20 @@ const User = () => {
     <>
       <SearchBar />
       <Table
-        data={currentData}
+        data={data}
+        columns={columns}
         currentPage={currentPage}
         itemsPerPage={itemsPerPage}
         onPageChange={handlePageChange}
         totalPages={totalPages}
+        onEdit={(id: any) => {
+          console.log("edited" + id);
+        }}
+        onDelete={(id: any) => {
+          console.log("deleted" + id);
+        }}
       />
+      <LoadingDialog isVisible={loading} />
     </>
   );
 };
