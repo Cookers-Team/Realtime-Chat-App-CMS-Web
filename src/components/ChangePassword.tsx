@@ -36,7 +36,7 @@ const ChangePassword = ({
       {isChecked && (
         <div className="border border-gray-200 rounded-lg p-4 space-y-4">
           <InputField
-            title="Mật khẩu"
+            title="Mật khẩu mới"
             isRequire={true}
             placeholder="Nhập mật khẩu"
             onChangeText={(value: any) => handleChange("password", value)}
