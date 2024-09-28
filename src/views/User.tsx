@@ -58,7 +58,7 @@ const User = () => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const itemsPerPage = 9;
+  const itemsPerPage = 10;
   const columns = [
     {
       label: "Ảnh",
