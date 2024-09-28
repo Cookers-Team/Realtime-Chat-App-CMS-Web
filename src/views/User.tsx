@@ -1,4 +1,3 @@
-import { PlusIcon, SearchIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import Table from "../components/Table";
 import { ConfimationDialog, LoadingDialog } from "../components/Dialog";
@@ -6,51 +5,9 @@ import useFetch from "../hooks/useFetch";
 import userImg from "../assets/user_icon.png";
 import useDialog from "../hooks/useDialog";
 import { toast } from "react-toastify";
-
-const SearchBar = () => (
-  <div className="flex items-center justify-between mb-4">
-    <div className="flex items-center">
-      <input
-        type="text"
-        placeholder="Nhập từ khóa tìm kiếm..."
-        className="border p-2 rounded-lg w-64 mr-2"
-      />
-      <div className="relative">
-        <select
-          className="border p-2 rounded-lg w-40 bg-white text-gray-700 appearance-none"
-          defaultValue=""
-        >
-          <option value="">Tất cả</option>
-          <option value="admin">Quản trị viên</option>
-          <option value="user">Người dùng</option>
-        </select>
-        <span className="absolute top-3 right-3 pointer-events-none">
-          <svg
-            className="w-4 h-4 text-gray-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M7 10l5 5 5-5H7z"
-            />
-          </svg>
-        </span>
-      </div>
-      <button className="bg-blue-500 hover:bg-blue-800 text-white border p-2 rounded-lg flex items-center ml-2">
-        <SearchIcon size={20} />
-        <span className="ml-1">Tìm kiếm</span>
-      </button>
-    </div>
-    <button className="bg-green-600 text-white p-2 rounded-lg flex items-center hover:bg-green-800">
-      <PlusIcon size={20} className="mr-1" /> Thêm
-    </button>
-  </div>
-);
+import Header from "../components/Header";
+import InputBox from "../components/InputBox";
+import SelectBox from "../components/SelectBox";
 
 const User = () => {
   const { isDialogVisible, showDialog, hideDialog } = useDialog();
@@ -103,15 +60,47 @@ const User = () => {
     },
   ];
   const { get, del, loading } = useFetch();
+  const [searchValues, setSearchValues] = useState({
+    displayName: "",
+    email: "",
+    phone: "",
+    role: "",
+    status: "",
+  });
+  const [roles, setRoles] = useState([]);
 
   const getData = async () => {
-    const res = await get("/v1/user/list", {
+    const query: any = {
       page: currentPage,
       size: itemsPerPage,
-    });
-    setData(res.data.content);
-    setTotalPages(res.data.totalPages);
+    };
+    if (searchValues.displayName) {
+      query.displayName = searchValues.displayName;
+    }
+    if (searchValues.email) {
+      query.email = searchValues.email;
+    }
+    if (searchValues.phone) {
+      query.phone = searchValues.phone;
+    }
+    if (searchValues.role) {
+      query.role = searchValues.role;
+    }
+    if (searchValues.status) {
+      query.status = searchValues.status;
+    }
+    const userRes = await get("/v1/user/list", query);
+    setData(userRes.data.content);
+    setTotalPages(userRes.data.totalPages);
   };
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      const roleRes = await get(`/v1/role/list?isPaged=0`);
+      setRoles(roleRes.data);
+    };
+    fetchRoles();
+  }, []);
 
   useEffect(() => {
     getData();
@@ -140,7 +129,66 @@ const User = () => {
 
   return (
     <>
-      <SearchBar />
+      <Header
+        onSearch={() => {
+          setCurrentPage(0);
+          getData();
+          console.log(searchValues);
+        }}
+        SearchBoxes={
+          <>
+            <InputBox
+              value={searchValues.displayName}
+              onChangeText={(value: any) =>
+                setSearchValues({ ...searchValues, displayName: value })
+              }
+              placeholder="Tên hiển thị..."
+            />
+            <InputBox
+              value={searchValues.email}
+              onChangeText={(value: any) =>
+                setSearchValues({ ...searchValues, email: value })
+              }
+              placeholder="Địa chỉ email..."
+            />
+            <InputBox
+              value={searchValues.phone}
+              onChangeText={(value: any) =>
+                setSearchValues({ ...searchValues, phone: value })
+              }
+              placeholder="Số điện thoại..."
+            />
+            <SelectBox
+              onChange={(value: any) =>
+                setSearchValues({
+                  ...searchValues,
+                  role: value,
+                })
+              }
+              value={searchValues.role}
+              placeholder="Vai trò..."
+              options={roles}
+              labelKey="name"
+              valueKey="_id"
+            />
+            <SelectBox
+              onChange={(value: any) =>
+                setSearchValues({
+                  ...searchValues,
+                  status: value,
+                })
+              }
+              placeholder="Trạng thái..."
+              options={[
+                { value: "0", name: "Chưa kích hoạt" },
+                { value: "1", name: "Hoạt động" },
+              ]}
+              labelKey="name"
+              valueKey="value"
+            />
+          </>
+        }
+      />
       <Table
         data={data}
         columns={columns}

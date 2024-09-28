@@ -190,6 +190,8 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
             icon={ShieldEllipsisIcon}
             disabled
             error={errors.roleId}
+            labelKey="name"
+            valueKey="_id"
           />
           <ChangePassword
             form={form}

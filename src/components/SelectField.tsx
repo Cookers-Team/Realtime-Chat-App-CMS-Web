@@ -7,6 +7,9 @@ const SelectField = ({
   options,
   error,
   disabled = false,
+  labelKey,
+  valueKey,
+  renderLabel,
 }: any) => {
   return (
     <div className="mb-4">
@@ -30,8 +33,8 @@ const SelectField = ({
         >
           <option value=""></option>
           {options.map((item: any) => (
-            <option key={item.id} value={item.id}>
-              {item.name}
+            <option key={item[valueKey]} value={item[valueKey]}>
+              {renderLabel ? renderLabel(item) : item[labelKey]}
             </option>
           ))}
         </select>

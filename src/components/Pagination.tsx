@@ -61,7 +61,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: any) => {
               : "bg-gray-100 text-gray-700 hover:bg-blue-100"
           }`}
         >
-          {item + 1} {/* Hiển thị số page bắt đầu từ 1 */}
+          {item + 1}
         </button>
       );
     });
