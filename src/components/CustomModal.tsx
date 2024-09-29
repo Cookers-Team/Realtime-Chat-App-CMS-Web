@@ -9,6 +9,7 @@ const CustomModal = ({
   buttonText = "OK",
   onButtonClick,
   loading,
+  color = "blue",
 }: any) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -19,7 +20,7 @@ const CustomModal = ({
         >
           <XIcon size={30} />
         </button>
-        <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">
+        <h2 className={`text-2xl font-bold mb-6 text-center text-${color}-600`}>
           {title}
         </h2>
         {topComponent && (
@@ -29,7 +30,7 @@ const CustomModal = ({
         <div className="mt-6">
           <button
             onClick={onButtonClick}
-            className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
+            className={`text-center text-white font-semibold text-lg w-full px-4 py-2 bg-${color}-600 rounded-md hover:bg-${color}-800 focus:ring-2 focus:ring-${color}-500`}
           >
             {buttonText}
           </button>

@@ -14,7 +14,7 @@ const Header = ({ SearchBoxes, onSearch, onCreate }: any) => (
     </div>
     <button
       onClick={onCreate}
-      className="bg-gray-600 text-white p-2 rounded-lg flex items-center hover:bg-gray-800"
+      className="bg-gray-600 hover:bg-gray-800 text-white p-2 rounded-lg flex items-center"
     >
       <PlusIcon size={20} className="mr-1" /> Thêm
     </button>

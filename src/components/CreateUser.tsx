@@ -5,6 +5,9 @@ import {
   InfoIcon,
   PhoneIcon,
   ShieldEllipsisIcon,
+  SparklesIcon,
+  LockIcon,
+  ShieldCheckIcon,
 } from "lucide-react";
 import InputField from "./InputField";
 import useForm from "../hooks/useForm";
@@ -12,15 +15,12 @@ import { EmailPattern, PhonePattern } from "../types/constant";
 import useFetch from "../hooks/useFetch";
 import UserIcon from "../assets/user_icon.png";
 import SelectField from "./SelectField";
-import { getDate, uploadImage } from "../types/utils";
+import { uploadImage } from "../types/utils";
 import DatePickerField from "./DatePickerField";
 import { toast } from "react-toastify";
-import ChangePassword from "./ChangePassword";
 import CustomModal from "./CustomModal";
 
-const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
-  const [isChecked, setIsChecked] = useState(false);
-  const [roles, setRoles] = useState([]);
+const CreateUser = ({ isVisible, setVisible, roles }: any) => {
   const [avatarPreview, setAvatarPreview] = useState<any>(null);
 
   const validate = (form: any) => {
@@ -34,55 +34,32 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
     else if (!PhonePattern.test(form.phone))
       newErrors.phone = "Số điện thoại không hợp lệ";
     if (!form.roleId.trim()) newErrors.roleId = "Vai trò không được bỏ trống";
-    if (isChecked) {
-      if (!form.password || form.password.length < 6)
-        newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự";
-      if (form.confirmPassword !== form.password)
-        newErrors.confirmPassword = "Mật khẩu xác nhận không trùng khớp";
-    }
+    if (!form.status) newErrors.status = "Trạng thái không được bỏ trống";
+    if (!form.password || form.password.length < 6)
+      newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự";
+    if (form.confirmPassword !== form.password)
+      newErrors.confirmPassword = "Mật khẩu xác nhận không trùng khớp";
     return newErrors;
   };
 
-  const { form, errors, setForm, setErrors, handleChange, isValidForm } =
-    useForm(
-      {
-        displayName: "",
-        email: "",
-        phone: "",
-        birthDate: "",
-        bio: "",
-        avatarUrl: null,
-        roleId: "",
-        password: "",
-        confirmPassword: "",
-      },
-      {},
-      validate
-    );
+  const { form, errors, setErrors, handleChange, isValidForm } = useForm(
+    {
+      displayName: "",
+      email: "",
+      phone: "",
+      birthDate: "",
+      bio: "",
+      avatarUrl: null,
+      roleId: "",
+      status: "",
+      password: "",
+      confirmPassword: "",
+    },
+    {},
+    validate
+  );
 
-  const { get, put, post, loading } = useFetch();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (userId) {
-        setErrors({});
-        setAvatarPreview(null);
-        setIsChecked(false);
-        const userRes = await get(`/v1/user/get/${userId}`);
-        const roleRes = await get(`/v1/role/list?isPaged=0`);
-        setRoles(roleRes.data);
-        setForm({
-          ...userRes.data,
-          roleId: userRes.data.role,
-          password: null,
-          birthDate: userRes.data.birthDate
-            ? getDate(userRes.data.birthDate)
-            : null,
-        });
-      }
-    };
-    fetchData();
-  }, [isVisible, userId]);
+  const { post, loading } = useFetch();
 
   const handleImageUpload = (e: any) => {
     const file = e.target.files[0];
@@ -93,20 +70,22 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
     }
   };
 
-  const handleUpdate = async () => {
+  useEffect(() => {
+    setErrors({});
+  }, [isVisible]);
+
+  const handleCreate = async () => {
     if (isValidForm()) {
-      const updatedForm = {
+      const createForm = {
         ...form,
         birthDate: form.birthDate ? `${form.birthDate} 07:00:00` : null,
-        password: form.password || null,
-        status: 1,
         avatarUrl: avatarPreview
           ? await uploadImage(avatarPreview, post)
           : form.avatarUrl,
       };
-      const res = await put("/v1/user/update", updatedForm);
+      const res = await post("/v1/user/create", createForm);
       if (res.result) {
-        toast.success("Cập nhật thành công");
+        toast.success("Thêm thành công");
         setVisible(false);
         window.location.reload();
       } else {
@@ -121,8 +100,9 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
 
   return (
     <CustomModal
+      color="gray"
       onClose={() => setVisible(false)}
-      title="Chỉnh sửa hồ sơ"
+      title="Thêm người dùng mới"
       topComponent={
         <div className="relative w-32 h-32 rounded-full border-4 overflow-hidden">
           <input
@@ -151,7 +131,7 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
           />
           <InputField
             title="Tiểu sử"
-            placeholder="Đôi nét về bạn"
+            placeholder="Nhập thông tin tiểu sử"
             value={form.bio}
             onChangeText={(value: any) => handleChange("bio", value)}
             icon={InfoIcon}
@@ -188,25 +168,53 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
             isRequire
             onChange={(value: any) => handleChange("roleId", value)}
             icon={ShieldEllipsisIcon}
-            disabled
             error={errors.roleId}
             labelKey="name"
             valueKey="_id"
           />
-          <ChangePassword
-            form={form}
-            errors={errors}
-            handleChange={handleChange}
-            isChecked={isChecked}
-            setIsChecked={setIsChecked}
+          <SelectField
+            title="Trạng thái"
+            value={form.status}
+            options={[
+              { value: "0", name: "Chưa kích hoạt" },
+              { value: "1", name: "Hoạt động" },
+            ]}
+            labelKey="name"
+            valueKey="value"
+            isRequire
+            onChange={(value: any) => handleChange("status", value)}
+            icon={SparklesIcon}
+            error={errors.status}
+          />
+          <InputField
+            title="Mật khẩu"
+            isRequire={true}
+            placeholder="Nhập mật khẩu"
+            onChangeText={(value: any) => handleChange("password", value)}
+            value={form.password}
+            icon={LockIcon}
+            error={errors.password}
+            secureTextEntry={true}
+          />
+          <InputField
+            title="Xác nhận mật khẩu"
+            isRequire={true}
+            placeholder="Nhập mật khẩu xác nhận"
+            onChangeText={(value: any) =>
+              handleChange("confirmPassword", value)
+            }
+            value={form.confirmPassword}
+            icon={ShieldCheckIcon}
+            secureTextEntry={true}
+            error={errors.confirmPassword}
           />
         </>
       }
-      buttonText="LƯU"
-      onButtonClick={handleUpdate}
+      buttonText="THÊM"
+      onButtonClick={handleCreate}
       loading={loading}
     />
   );
 };
 
-export default UpdateProfile;
+export default CreateUser;

@@ -5,6 +5,7 @@ import {
   InfoIcon,
   PhoneIcon,
   ShieldEllipsisIcon,
+  SparklesIcon,
 } from "lucide-react";
 import InputField from "./InputField";
 import useForm from "../hooks/useForm";
@@ -18,9 +19,8 @@ import { toast } from "react-toastify";
 import ChangePassword from "./ChangePassword";
 import CustomModal from "./CustomModal";
 
-const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
+const UpdateUser = ({ isVisible, setVisible, userId, roles }: any) => {
   const [isChecked, setIsChecked] = useState(false);
-  const [roles, setRoles] = useState([]);
   const [avatarPreview, setAvatarPreview] = useState<any>(null);
 
   const validate = (form: any) => {
@@ -34,6 +34,7 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
     else if (!PhonePattern.test(form.phone))
       newErrors.phone = "Số điện thoại không hợp lệ";
     if (!form.roleId.trim()) newErrors.roleId = "Vai trò không được bỏ trống";
+    if (!form.status) newErrors.status = "Trạng thái không được bỏ trống";
     if (isChecked) {
       if (!form.password || form.password.length < 6)
         newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự";
@@ -53,6 +54,7 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
         bio: "",
         avatarUrl: null,
         roleId: "",
+        status: "",
         password: "",
         confirmPassword: "",
       },
@@ -69,8 +71,6 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
         setAvatarPreview(null);
         setIsChecked(false);
         const userRes = await get(`/v1/user/get/${userId}`);
-        const roleRes = await get(`/v1/role/list?isPaged=0`);
-        setRoles(roleRes.data);
         setForm({
           ...userRes.data,
           roleId: userRes.data.role,
@@ -99,7 +99,6 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
         ...form,
         birthDate: form.birthDate ? `${form.birthDate} 07:00:00` : null,
         password: form.password || null,
-        status: 1,
         avatarUrl: avatarPreview
           ? await uploadImage(avatarPreview, post)
           : form.avatarUrl,
@@ -122,7 +121,7 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
   return (
     <CustomModal
       onClose={() => setVisible(false)}
-      title="Chỉnh sửa hồ sơ"
+      title="Chỉnh sửa người dùng"
       topComponent={
         <div className="relative w-32 h-32 rounded-full border-4 overflow-hidden">
           <input
@@ -151,7 +150,7 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
           />
           <InputField
             title="Tiểu sử"
-            placeholder="Đôi nét về bạn"
+            placeholder="Nhập thông tin tiểu sử"
             value={form.bio}
             onChangeText={(value: any) => handleChange("bio", value)}
             icon={InfoIcon}
@@ -188,10 +187,23 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
             isRequire
             onChange={(value: any) => handleChange("roleId", value)}
             icon={ShieldEllipsisIcon}
-            disabled
             error={errors.roleId}
             labelKey="name"
             valueKey="_id"
+          />
+          <SelectField
+            title="Trạng thái"
+            value={form.status}
+            options={[
+              { value: "0", name: "Chưa kích hoạt" },
+              { value: "1", name: "Hoạt động" },
+            ]}
+            labelKey="name"
+            valueKey="value"
+            isRequire
+            onChange={(value: any) => handleChange("status", value)}
+            icon={SparklesIcon}
+            error={errors.status}
           />
           <ChangePassword
             form={form}
@@ -209,4 +221,4 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
   );
 };
 
-export default UpdateProfile;
+export default UpdateUser;

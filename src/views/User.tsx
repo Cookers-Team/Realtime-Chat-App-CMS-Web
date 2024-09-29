@@ -8,8 +8,13 @@ import { toast } from "react-toastify";
 import Header from "../components/Header";
 import InputBox from "../components/InputBox";
 import SelectBox from "../components/SelectBox";
+import UpdateUser from "../components/UpdateUser";
+import CreateUser from "../components/CreateUser";
 
-const User = () => {
+const User = ({ profileId }: any) => {
+  const [updateModalVisible, setUpdateModalVisible] = useState(false);
+  const [createModalVisible, setCreateModalVisible] = useState(false);
+  const [userId, setUserId] = useState(null);
   const { isDialogVisible, showDialog, hideDialog } = useDialog();
   const [deleteId, setDeleteId] = useState(null);
   const [data, setData] = useState([]);
@@ -130,6 +135,9 @@ const User = () => {
   return (
     <>
       <Header
+        onCreate={() => {
+          setCreateModalVisible(true);
+        }}
         onSearch={() => {
           setCurrentPage(0);
           getData();
@@ -197,13 +205,18 @@ const User = () => {
         onPageChange={handlePageChange}
         totalPages={totalPages}
         onEdit={(id: any) => {
-          console.log(id);
+          setUserId(id);
+          setUpdateModalVisible(true);
         }}
         onDelete={(id: any) => {
           handleDeleteDialog(id);
         }}
-        disableEditCondition={(item: any) => item.isSuperAdmin}
-        disableDeleteCondition={(item: any) => item.isSuperAdmin}
+        disableEditCondition={(item: any) =>
+          item.isSuperAdmin || item._id === profileId
+        }
+        disableDeleteCondition={(item: any) =>
+          item.isSuperAdmin || item._id === profileId
+        }
       />
       <LoadingDialog isVisible={loading} />
       <ConfimationDialog
@@ -214,6 +227,18 @@ const User = () => {
         confirmText="Xóa"
         onCancel={hideDialog}
         color="red"
+      />
+      <UpdateUser
+        isVisible={updateModalVisible}
+        setVisible={setUpdateModalVisible}
+        userId={userId}
+        roles={roles}
+      />
+      <CreateUser
+        isVisible={createModalVisible}
+        setVisible={setCreateModalVisible}
+        userId={userId}
+        roles={roles}
       />
     </>
   );
