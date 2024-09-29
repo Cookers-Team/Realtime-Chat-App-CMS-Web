@@ -49,7 +49,7 @@ const Sidebar = ({
                   className={`flex items-center p-3 m-2 rounded-lg cursor-pointer transition-colors ${
                     activeItem === item.name
                       ? "bg-blue-500"
-                      : "hover:bg-gray-700"
+                      : "hover:bg-blue-700"
                   }`}
                   onClick={() => onMenuItemClick(item.name)}
                 >
