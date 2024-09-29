@@ -20,7 +20,7 @@ import DatePickerField from "./DatePickerField";
 import { toast } from "react-toastify";
 import CustomModal from "./CustomModal";
 
-const CreateUser = ({ isVisible, setVisible, roles }: any) => {
+const CreateUser = ({ isVisible, setVisible, roles, onButtonClick }: any) => {
   const [avatarPreview, setAvatarPreview] = useState<any>(null);
 
   const validate = (form: any) => {
@@ -87,7 +87,7 @@ const CreateUser = ({ isVisible, setVisible, roles }: any) => {
       if (res.result) {
         toast.success("Thêm thành công");
         setVisible(false);
-        window.location.reload();
+        onButtonClick();
       } else {
         toast.error(res.message);
       }

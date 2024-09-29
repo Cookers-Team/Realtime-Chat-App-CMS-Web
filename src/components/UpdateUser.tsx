@@ -19,7 +19,13 @@ import { toast } from "react-toastify";
 import ChangePassword from "./ChangePassword";
 import CustomModal from "./CustomModal";
 
-const UpdateUser = ({ isVisible, setVisible, userId, roles }: any) => {
+const UpdateUser = ({
+  isVisible,
+  setVisible,
+  userId,
+  roles,
+  onButtonClick,
+}: any) => {
   const [isChecked, setIsChecked] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState<any>(null);
 
@@ -107,7 +113,7 @@ const UpdateUser = ({ isVisible, setVisible, userId, roles }: any) => {
       if (res.result) {
         toast.success("Cập nhật thành công");
         setVisible(false);
-        window.location.reload();
+        onButtonClick();
       } else {
         toast.error(res.message);
       }

@@ -55,13 +55,13 @@ const Home = () => {
   const renderContent = () => {
     switch (activeItem) {
       case "user":
-        return <User profileId={profile._id} />;
+        return <User profile={profile} />;
       case "post":
-        return <Post />;
+        return <Post profile={profile} />;
       case "role":
-        return <Role />;
+        return <Role profile={profile} />;
       default:
-        return <User />;
+        return <User profile={profile} />;
     }
   };
 

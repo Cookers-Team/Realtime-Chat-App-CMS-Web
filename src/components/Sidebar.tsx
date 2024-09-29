@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BellIcon, LogOutIcon, TrashIcon, CheckIcon } from "lucide-react";
+import { BellIcon, LogOutIcon } from "lucide-react";
 import logo from "../assets/cms.png";
 import userImage from "../assets/user_icon.png";
 import Notification from "./Notification";

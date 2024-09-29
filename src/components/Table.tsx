@@ -7,6 +7,7 @@ const Table = ({
   columns,
   currentPage,
   totalPages,
+  itemsPerPage,
   onPageChange,
   onView,
   onEdit,
@@ -38,7 +39,9 @@ const Table = ({
                   key={item.id || index}
                   className="border-b hover:bg-blue-100 transition-colors duration-200"
                 >
-                  <td className="p-4 text-center">{index + 1}</td>
+                  <td className="p-4 text-center">
+                    {index + 1 + currentPage * itemsPerPage}
+                  </td>
                   {columns.map((col: any) => (
                     <td key={col.accessor} className={`p-4 text-${col.align}`}>
                       {col.render ? col.render(item) : item[col.accessor]}

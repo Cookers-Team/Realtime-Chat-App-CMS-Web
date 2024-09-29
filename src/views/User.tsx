@@ -11,7 +11,7 @@ import SelectBox from "../components/SelectBox";
 import UpdateUser from "../components/UpdateUser";
 import CreateUser from "../components/CreateUser";
 
-const User = ({ profileId }: any) => {
+const User = ({ profile }: any) => {
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [userId, setUserId] = useState(null);
@@ -120,8 +120,7 @@ const User = ({ profileId }: any) => {
     const res = await del("/v1/user/delete/" + deleteId);
     if (res.result) {
       toast.success("Xóa thành công");
-      setCurrentPage(0);
-      getData();
+      await handleRefreshData();
     } else {
       toast.error(res.message);
     }
@@ -132,17 +131,36 @@ const User = ({ profileId }: any) => {
     showDialog();
   };
 
+  const handleRefreshData = async () => {
+    setCurrentPage(0);
+    await getData();
+  };
+
+  const handleClear = async () => {
+    setSearchValues({
+      displayName: "",
+      email: "",
+      phone: "",
+      role: "",
+      status: "",
+    });
+    setCurrentPage(0);
+    const userRes = await get("/v1/user/list", {
+      page: 0,
+      size: itemsPerPage,
+    });
+    setData(userRes.data.content);
+    setTotalPages(userRes.data.totalPages);
+  };
+
   return (
     <>
       <Header
         onCreate={() => {
           setCreateModalVisible(true);
         }}
-        onSearch={() => {
-          setCurrentPage(0);
-          getData();
-          console.log(searchValues);
-        }}
+        onClear={handleClear}
+        onSearch={handleRefreshData}
         SearchBoxes={
           <>
             <InputBox
@@ -212,10 +230,10 @@ const User = ({ profileId }: any) => {
           handleDeleteDialog(id);
         }}
         disableEditCondition={(item: any) =>
-          item.isSuperAdmin || item._id === profileId
+          item.isSuperAdmin || item._id === profile._id
         }
         disableDeleteCondition={(item: any) =>
-          item.isSuperAdmin || item._id === profileId
+          item.isSuperAdmin || item._id === profile._id
         }
       />
       <LoadingDialog isVisible={loading} />
@@ -233,12 +251,14 @@ const User = ({ profileId }: any) => {
         setVisible={setUpdateModalVisible}
         userId={userId}
         roles={roles}
+        onButtonClick={handleRefreshData}
       />
       <CreateUser
         isVisible={createModalVisible}
         setVisible={setCreateModalVisible}
         userId={userId}
         roles={roles}
+        onButtonClick={handleRefreshData}
       />
     </>
   );
