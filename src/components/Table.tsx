@@ -36,7 +36,7 @@ const Table = ({
             <tbody className="text-gray-600">
               {data.map((item: any, index: any) => (
                 <tr
-                  key={item.id || index}
+                  key={item._id || index}
                   className="border-b hover:bg-blue-100 transition-colors duration-200"
                 >
                   <td className="p-4 text-center">
@@ -52,7 +52,7 @@ const Table = ({
                       {onView && (
                         <button
                           className="text-green-500 p-1"
-                          onClick={() => onView(item.id)}
+                          onClick={() => onView(item._id)}
                         >
                           <EyeIcon size={16} />
                         </button>
@@ -64,7 +64,7 @@ const Table = ({
                               ? "text-gray-500 cursor-not-allowed"
                               : "text-blue-500"
                           }`}
-                          onClick={() => onEdit(item.id)}
+                          onClick={() => onEdit(item._id)}
                           disabled={
                             disableEditCondition && disableEditCondition(item)
                           }
@@ -80,7 +80,7 @@ const Table = ({
                               ? "text-gray-500 cursor-not-allowed"
                               : "text-red-500"
                           }`}
-                          onClick={() => onDelete(item.id)}
+                          onClick={() => onDelete(item._id)}
                           disabled={
                             disableDeleteCondition &&
                             disableDeleteCondition(item)

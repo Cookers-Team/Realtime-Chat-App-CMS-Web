@@ -31,6 +31,7 @@ const CreateRole = ({
   }, {});
 
   useEffect(() => {
+    setForm({ name: "", permissions: [] });
     setErrors({});
   }, [isVisible]);
 

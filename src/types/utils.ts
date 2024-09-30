@@ -41,4 +41,11 @@ const uploadImage = async (
   return null;
 };
 
-export { dateToString, stringToDate, uploadImage, getDate };
+const isAdminRole = (roleName: string) => {
+  return (
+    roleName?.toLowerCase().includes("admin") ||
+    roleName?.toLowerCase().includes("quản trị")
+  );
+};
+
+export { dateToString, stringToDate, uploadImage, getDate, isAdminRole };

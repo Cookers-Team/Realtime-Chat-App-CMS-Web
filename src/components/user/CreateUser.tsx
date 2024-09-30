@@ -42,22 +42,23 @@ const CreateUser = ({ isVisible, setVisible, roles, onButtonClick }: any) => {
     return newErrors;
   };
 
-  const { form, errors, setErrors, handleChange, isValidForm } = useForm(
-    {
-      displayName: "",
-      email: "",
-      phone: "",
-      birthDate: "",
-      bio: "",
-      avatarUrl: null,
-      roleId: "",
-      status: "",
-      password: "",
-      confirmPassword: "",
-    },
-    {},
-    validate
-  );
+  const { form, errors, setForm, setErrors, handleChange, isValidForm } =
+    useForm(
+      {
+        displayName: "",
+        email: "",
+        phone: "",
+        birthDate: "",
+        bio: "",
+        avatarUrl: null,
+        roleId: "",
+        status: "",
+        password: "",
+        confirmPassword: "",
+      },
+      {},
+      validate
+    );
 
   const { post, loading } = useFetch();
 
@@ -71,6 +72,18 @@ const CreateUser = ({ isVisible, setVisible, roles, onButtonClick }: any) => {
   };
 
   useEffect(() => {
+    setForm({
+      displayName: "",
+      email: "",
+      phone: "",
+      birthDate: "",
+      bio: "",
+      avatarUrl: null,
+      roleId: "",
+      status: "",
+      password: "",
+      confirmPassword: "",
+    });
     setErrors({});
   }, [isVisible]);
 

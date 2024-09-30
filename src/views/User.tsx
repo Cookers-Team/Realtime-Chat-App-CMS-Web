@@ -28,7 +28,7 @@ const User = ({ profile }: any) => {
       align: "left",
       render: (item: any) => (
         <img
-          className="w-10 h-10 rounded-full"
+          className="w-10 h-10 rounded-full border-gray-300 border"
           src={item.avatarUrl ? item.avatarUrl : userImg}
         ></img>
       ),

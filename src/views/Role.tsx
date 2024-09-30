@@ -6,6 +6,7 @@ import Header from "../components/Header";
 import InputBox from "../components/InputBox";
 import CreateRole from "../components/role/CreateRole";
 import UpdateRole from "../components/role/UpdateRole";
+import { isAdminRole } from "../types/utils";
 
 const Role = ({ profile }: any) => {
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
@@ -107,9 +108,7 @@ const Role = ({ profile }: any) => {
           setUpdateModalVisible(true);
         }}
         disableEditCondition={(item: any) =>
-          item.name.toLowerCase().includes("admin") ||
-          (item.name.toLowerCase().includes("quản trị") &&
-            !profile.isSuperAdmin)
+          isAdminRole(item.name) && !profile.isSuperAdmin
         }
       />
       <LoadingDialog isVisible={loading} />

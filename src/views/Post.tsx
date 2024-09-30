@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
 import Table from "../components/Table";
-import { LoadingDialog } from "../components/Dialog";
+import { ConfimationDialog, LoadingDialog } from "../components/Dialog";
 import useFetch from "../hooks/useFetch";
 import Header from "../components/Header";
 import InputBox from "../components/InputBox";
 import userImg from "../assets/user_icon.png";
 import SelectBox from "../components/SelectBox";
+import CreatePost from "../components/post/CreatePost";
+import UpdatePost from "../components/post/UpdatePost";
+import useDialog from "../hooks/useDialog";
+import { toast } from "react-toastify";
 
 const Post = ({ profile }: any) => {
+  const { isDialogVisible, showDialog, hideDialog } = useDialog();
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [postId, setPostId] = useState(null);
@@ -23,7 +28,7 @@ const Post = ({ profile }: any) => {
       align: "left",
       render: (item: any) => (
         <img
-          className="w-10 h-10 rounded-full"
+          className="w-10 h-10 rounded-full border-gray-300 border"
           src={item.user.avatarUrl ? item.user.avatarUrl : userImg}
         ></img>
       ),
@@ -38,6 +43,25 @@ const Post = ({ profile }: any) => {
       label: "Nội dung",
       accessor: "content",
       align: "left",
+      render: (item: any) => {
+        const content =
+          item.content.length > 100
+            ? item.content.slice(0, 100) + "..."
+            : item.content;
+        return <span>{content}</span>;
+      },
+    },
+    {
+      label: "Yêu thích",
+      accessor: "likes",
+      align: "center",
+      render: (item: any) => <span>{item.totalReactions}</span>,
+    },
+    {
+      label: "Bình luận",
+      accessor: "comments",
+      align: "center",
+      render: (item: any) => <span>{item.totalComments}</span>,
     },
     {
       label: "Ngày đăng",
@@ -45,7 +69,7 @@ const Post = ({ profile }: any) => {
       align: "center",
     },
   ];
-  const { get, loading } = useFetch();
+  const { get, del, loading } = useFetch();
   const [searchValues, setSearchValues] = useState({
     content: "",
     user: "",
@@ -81,6 +105,22 @@ const Post = ({ profile }: any) => {
 
   const handlePageChange = (pageNumber: any) => {
     setCurrentPage(pageNumber);
+  };
+
+  const handleDelete = async () => {
+    hideDialog();
+    const res = await del("/v1/post/delete/" + postId);
+    if (res.result) {
+      toast.success("Xóa thành công");
+      await handleClear();
+    } else {
+      toast.error(res.message);
+    }
+  };
+
+  const handleDeleteDialog = (id: any) => {
+    setPostId(id);
+    showDialog();
   };
 
   const handleRefreshData = async () => {
@@ -149,24 +189,31 @@ const Post = ({ profile }: any) => {
           setUpdateModalVisible(true);
         }}
         onDelete={(id: any) => {
-          setPostId(id);
+          handleDeleteDialog(id);
         }}
-        disableEditCondition={() => !profile.isSuperAdmin}
+      />
+      <ConfimationDialog
+        isVisible={isDialogVisible}
+        title="Xóa bài đăng"
+        message="Bạn có chắc muốn xóa bài đăng này?"
+        onConfirm={handleDelete}
+        confirmText="Xóa"
+        onCancel={hideDialog}
+        color="red"
       />
       <LoadingDialog isVisible={loading} />
-      {/* <UpdateRole
+      <UpdatePost
         isVisible={updateModalVisible}
         setVisible={setUpdateModalVisible}
-        roleId={roleId}
-        permissions={permissions}
-        onButtonClick={handleRefreshData}
+        postId={postId}
+        onButtonClick={handleClear}
       />
-      <CreateRole
+      <CreatePost
         isVisible={createModalVisible}
         setVisible={setCreateModalVisible}
-        permissions={permissions}
-        onButtonClick={handleRefreshData}
-      /> */}
+        profile={profile}
+        onButtonClick={handleClear}
+      />
     </>
   );
 };

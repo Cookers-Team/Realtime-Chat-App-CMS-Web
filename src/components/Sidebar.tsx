@@ -25,7 +25,7 @@ const Sidebar = ({
         >
           <img
             src={profile?.avatarUrl ? profile.avatarUrl : userImage}
-            className="w-10 h-10 rounded-full mr-2"
+            className="w-10 h-10 rounded-full mr-2 border-gray-300 border"
             alt="User Avatar"
           />
           <span className="mr-2">{profile.displayName}</span>
