@@ -7,17 +7,17 @@ import {
   ShieldEllipsisIcon,
   SparklesIcon,
 } from "lucide-react";
-import InputField from "./InputField";
-import useForm from "../hooks/useForm";
-import { EmailPattern, PhonePattern } from "../types/constant";
-import useFetch from "../hooks/useFetch";
-import UserIcon from "../assets/user_icon.png";
-import SelectField from "./SelectField";
-import { getDate, uploadImage } from "../types/utils";
-import DatePickerField from "./DatePickerField";
+import InputField from "../InputField";
+import useForm from "../../hooks/useForm";
+import { EmailPattern, PhonePattern } from "../../types/constant";
+import useFetch from "../../hooks/useFetch";
+import UserIcon from "../../assets/user_icon.png";
+import SelectField from "../SelectField";
+import { getDate, uploadImage } from "../../types/utils";
+import DatePickerField from "../DatePickerField";
 import { toast } from "react-toastify";
 import ChangePassword from "./ChangePassword";
-import CustomModal from "./CustomModal";
+import CustomModal from "../CustomModal";
 
 const UpdateUser = ({
   isVisible,

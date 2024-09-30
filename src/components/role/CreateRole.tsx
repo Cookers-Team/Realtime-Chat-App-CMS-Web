@@ -1,13 +1,12 @@
 import { useEffect } from "react";
 import { TagIcon } from "lucide-react";
-import InputField from "./InputField";
-import useForm from "../hooks/useForm";
-import useFetch from "../hooks/useFetch";
+import InputField from "../InputField";
+import useForm from "../../hooks/useForm";
+import useFetch from "../../hooks/useFetch";
 import { toast } from "react-toastify";
-import CustomModal from "./CustomModal";
+import CustomModal from "../CustomModal";
 
-const UpdateRole = ({
-  roleId,
+const CreateRole = ({
   isVisible,
   setVisible,
   permissions,
@@ -23,7 +22,7 @@ const UpdateRole = ({
 
   const { form, errors, setForm, setErrors, handleChange, isValidForm } =
     useForm({ name: "", permissions: [] }, {}, validate);
-  const { get, put, loading } = useFetch();
+  const { post, loading } = useFetch();
 
   const groupedPermissions = permissions.reduce((acc: any, perm: any) => {
     if (!acc[perm.groupName]) acc[perm.groupName] = [];
@@ -32,23 +31,8 @@ const UpdateRole = ({
   }, {});
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (roleId) {
-        setErrors({});
-        const res = await get(`/v1/role/get/${roleId}`);
-        if (res.result) {
-          const roleData = res.data;
-          setForm({
-            name: roleData.name,
-            permissions: roleData.permissions.map((p: any) => p._id),
-          });
-        } else {
-          toast.error(res.message);
-        }
-      }
-    };
-    fetchData();
-  }, [isVisible, roleId]);
+    setErrors({});
+  }, [isVisible]);
 
   const handlePermissionChange = (id: string) => {
     setForm((prevForm: any) => {
@@ -59,15 +43,14 @@ const UpdateRole = ({
     });
   };
 
-  const handleUpdate = async () => {
+  const handleCreate = async () => {
     if (isValidForm()) {
-      const res = await put("/v1/role/update", {
-        id: roleId,
+      const res = await post("/v1/role/create", {
         name: form.name,
         permissions: form.permissions,
       });
       if (res.result) {
-        toast.success("Cập nhật thành công");
+        toast.success("Thêm thành công");
         setVisible(false);
         onButtonClick();
       } else {
@@ -82,8 +65,9 @@ const UpdateRole = ({
 
   return (
     <CustomModal
+      color="gray"
       onClose={() => setVisible(false)}
-      title="Cập nhật vai trò"
+      title="Thêm vai trò"
       bodyComponent={
         <>
           <InputField
@@ -124,11 +108,11 @@ const UpdateRole = ({
           ))}
         </>
       }
-      buttonText="LƯU"
-      onButtonClick={handleUpdate}
+      buttonText="THÊM"
+      onButtonClick={handleCreate}
       loading={loading}
     />
   );
 };
 
-export default UpdateRole;
+export default CreateRole;

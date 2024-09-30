@@ -9,16 +9,16 @@ import {
   LockIcon,
   ShieldCheckIcon,
 } from "lucide-react";
-import InputField from "./InputField";
-import useForm from "../hooks/useForm";
-import { EmailPattern, PhonePattern } from "../types/constant";
-import useFetch from "../hooks/useFetch";
-import UserIcon from "../assets/user_icon.png";
-import SelectField from "./SelectField";
-import { uploadImage } from "../types/utils";
-import DatePickerField from "./DatePickerField";
+import InputField from "../InputField";
+import useForm from "../../hooks/useForm";
+import { EmailPattern, PhonePattern } from "../../types/constant";
+import useFetch from "../../hooks/useFetch";
+import UserIcon from "../../assets/user_icon.png";
+import SelectField from "../SelectField";
+import { uploadImage } from "../../types/utils";
+import DatePickerField from "../DatePickerField";
 import { toast } from "react-toastify";
-import CustomModal from "./CustomModal";
+import CustomModal from "../CustomModal";
 
 const CreateUser = ({ isVisible, setVisible, roles, onButtonClick }: any) => {
   const [avatarPreview, setAvatarPreview] = useState<any>(null);

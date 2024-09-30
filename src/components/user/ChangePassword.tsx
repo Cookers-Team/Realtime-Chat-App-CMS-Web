@@ -1,4 +1,4 @@
-import InputField from "./InputField";
+import InputField from "../InputField";
 import { LockIcon, ShieldCheckIcon } from "lucide-react";
 
 const ChangePassword = ({

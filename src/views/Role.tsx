@@ -4,8 +4,8 @@ import { LoadingDialog } from "../components/Dialog";
 import useFetch from "../hooks/useFetch";
 import Header from "../components/Header";
 import InputBox from "../components/InputBox";
-import CreateRole from "../components/CreateRole";
-import UpdateRole from "../components/UpdateRole";
+import CreateRole from "../components/role/CreateRole";
+import UpdateRole from "../components/role/UpdateRole";
 
 const Role = ({ profile }: any) => {
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
@@ -118,13 +118,13 @@ const Role = ({ profile }: any) => {
         setVisible={setUpdateModalVisible}
         roleId={roleId}
         permissions={permissions}
-        onButtonClick={handleRefreshData}
+        onButtonClick={handleClear}
       />
       <CreateRole
         isVisible={createModalVisible}
         setVisible={setCreateModalVisible}
         permissions={permissions}
-        onButtonClick={handleRefreshData}
+        onButtonClick={handleClear}
       />
     </>
   );

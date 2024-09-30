@@ -8,8 +8,8 @@ import { toast } from "react-toastify";
 import Header from "../components/Header";
 import InputBox from "../components/InputBox";
 import SelectBox from "../components/SelectBox";
-import UpdateUser from "../components/UpdateUser";
-import CreateUser from "../components/CreateUser";
+import UpdateUser from "../components/user/UpdateUser";
+import CreateUser from "../components/user/CreateUser";
 
 const User = ({ profile }: any) => {
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
@@ -120,7 +120,7 @@ const User = ({ profile }: any) => {
     const res = await del("/v1/user/delete/" + deleteId);
     if (res.result) {
       toast.success("Xóa thành công");
-      await handleRefreshData();
+      await handleClear();
     } else {
       toast.error(res.message);
     }
@@ -184,19 +184,21 @@ const User = ({ profile }: any) => {
               }
               placeholder="Số điện thoại..."
             />
-            <SelectBox
-              onChange={(value: any) =>
-                setSearchValues({
-                  ...searchValues,
-                  role: value,
-                })
-              }
-              value={searchValues.role}
-              placeholder="Vai trò..."
-              options={roles}
-              labelKey="name"
-              valueKey="_id"
-            />
+            {roles && (
+              <SelectBox
+                onChange={(value: any) =>
+                  setSearchValues({
+                    ...searchValues,
+                    role: value,
+                  })
+                }
+                value={searchValues.role}
+                placeholder="Vai trò..."
+                options={roles}
+                labelKey="name"
+                valueKey="_id"
+              />
+            )}
             <SelectBox
               onChange={(value: any) =>
                 setSearchValues({
@@ -251,14 +253,14 @@ const User = ({ profile }: any) => {
         setVisible={setUpdateModalVisible}
         userId={userId}
         roles={roles}
-        onButtonClick={handleRefreshData}
+        onButtonClick={handleClear}
       />
       <CreateUser
         isVisible={createModalVisible}
         setVisible={setCreateModalVisible}
         userId={userId}
         roles={roles}
-        onButtonClick={handleRefreshData}
+        onButtonClick={handleClear}
       />
     </>
   );

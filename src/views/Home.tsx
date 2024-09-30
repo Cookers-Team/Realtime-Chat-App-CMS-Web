@@ -8,7 +8,7 @@ import { ConfimationDialog, LoadingDialog } from "../components/Dialog";
 import { ToastContainer } from "react-toastify";
 import useDialog from "../hooks/useDialog";
 import Sidebar from "../components/Sidebar";
-import UpdateProfile from "../components/UpdateProfile";
+import UpdateProfile from "../components/user/UpdateProfile";
 
 const Home = () => {
   const [isModalVisible, setModalVisible] = useState(false);
