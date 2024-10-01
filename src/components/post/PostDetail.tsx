@@ -66,7 +66,7 @@ const PostDetail = ({ postId, profile }: any) => {
         <div
           className={`${getRandomColor()} rounded-lg px-4 mr-2 py-8 mb-4 h-[500px] flex items-center justify-center overflow-hidden`}
         >
-          <p className="text-white text-2xl font-bold text-center break-words overflow-auto max-h-full">
+          <p className="text-white text-2xl font-bold break-words overflow-auto max-h-full">
             {data.content}
           </p>
         </div>
