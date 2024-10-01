@@ -55,7 +55,7 @@ const PostDetail = ({ postId, profile }: any) => {
         <div className="flex items-center mb-4">
           <img
             src={data.user?.avatarUrl || UserImg}
-            className="w-12 h-12 rounded-full mr-4"
+            className="w-12 h-12 rounded-full mr-4 border-gray-300 border"
           />
           <div>
             <h2 className="font-bold text-lg">{data.user?.displayName}</h2>
