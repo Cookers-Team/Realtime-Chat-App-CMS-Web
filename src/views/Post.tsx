@@ -10,6 +10,8 @@ import CreatePost from "../components/post/CreatePost";
 import UpdatePost from "../components/post/UpdatePost";
 import useDialog from "../hooks/useDialog";
 import { toast } from "react-toastify";
+import PostDetail from "../components/post/PostDetail";
+import Breadcrumb from "../components/Breadcrumb";
 
 const Post = ({ profile }: any) => {
   const { isDialogVisible, showDialog, hideDialog } = useDialog();
@@ -20,7 +22,9 @@ const Post = ({ profile }: any) => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [view, setView] = useState("list");
   const itemsPerPage = 10;
+
   const columns = [
     {
       label: "Ảnh",
@@ -69,6 +73,7 @@ const Post = ({ profile }: any) => {
       align: "center",
     },
   ];
+
   const { get, del, loading } = useFetch();
   const [searchValues, setSearchValues] = useState({
     content: "",
@@ -141,57 +146,70 @@ const Post = ({ profile }: any) => {
 
   return (
     <>
-      <Header
-        onCreate={() => {
-          setCreateModalVisible(true);
-        }}
-        onSearch={handleRefreshData}
-        onClear={handleClear}
-        SearchBoxes={
-          <>
-            <InputBox
-              value={searchValues.content}
-              onChangeText={(value: any) =>
-                setSearchValues({ ...searchValues, content: value })
-              }
-              placeholder="Nội dung bài viết..."
-            />
-            {users && (
-              <SelectBox
-                value={searchValues.user}
-                placeholder="Người đăng..."
-                options={users}
-                labelKey="displayName"
-                valueKey="_id"
-                onChange={(value: any) =>
-                  setSearchValues({
-                    ...searchValues,
-                    user: value,
-                  })
-                }
-              />
-            )}
-          </>
-        }
+      <Breadcrumb
+        currentView={view}
+        setView={setView}
+        listLabel="Quản lý bài đăng"
+        detailLabel="Chi tiết bài đăng"
       />
-      <Table
-        data={data}
-        columns={columns}
-        currentPage={currentPage}
-        itemsPerPage={itemsPerPage}
-        onPageChange={handlePageChange}
-        totalPages={totalPages}
-        onView={(id: any) => {
-          setPostId(id);
-        }}
-        onEdit={(id: any) => {
-          setPostId(id);
-          setUpdateModalVisible(true);
-        }}
-        onDelete={(id: any) => {
-          handleDeleteDialog(id);
-        }}
-      />
+      {view === "list" ? (
+        <>
+          <Header
+            onCreate={() => {
+              setCreateModalVisible(true);
+            }}
+            onSearch={handleRefreshData}
+            onClear={handleClear}
+            SearchBoxes={
+              <>
+                <InputBox
+                  value={searchValues.content}
+                  onChangeText={(value: any) =>
+                    setSearchValues({ ...searchValues, content: value })
+                  }
+                  placeholder="Nội dung bài viết..."
+                />
+                {users && (
+                  <SelectBox
+                    value={searchValues.user}
+                    placeholder="Người đăng..."
+                    options={users}
+                    labelKey="displayName"
+                    valueKey="_id"
+                    onChange={(value: any) =>
+                      setSearchValues({
+                        ...searchValues,
+                        user: value,
+                      })
+                    }
+                  />
+                )}
+              </>
+            }
+          />
+          <Table
+            data={data}
+            columns={columns}
+            currentPage={currentPage}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+            totalPages={totalPages}
+            onView={(id: any) => {
+              setPostId(id);
+              setView("detail");
+            }}
+            onEdit={(id: any) => {
+              setPostId(id);
+              setUpdateModalVisible(true);
+            }}
+            onDelete={(id: any) => {
+              handleDeleteDialog(id);
+            }}
+          />
+        </>
+      ) : (
+        <PostDetail postId={postId} />
+      )}
       <ConfimationDialog
         isVisible={isDialogVisible}
         title="Xóa bài đăng"

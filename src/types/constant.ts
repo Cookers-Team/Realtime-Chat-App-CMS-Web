@@ -3,7 +3,6 @@ const EmailPattern =
 
 const PhonePattern = /^0[35789][0-9]{8}$/;
 
-// const remoteUrl = "https://realtime-chat-app-api-tbaf.onrender.com";
-const remoteUrl = "http://localhost:7978";
+const remoteUrl = "https://realtime-chat-app-api-tbaf.onrender.com";
 
 export { EmailPattern, PhonePattern, remoteUrl };

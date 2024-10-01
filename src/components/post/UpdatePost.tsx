@@ -72,14 +72,19 @@ const UpdatePost = ({ isVisible, setVisible, postId, onButtonClick }: any) => {
           <div className="flex items-center space-x-2 mb-4">
             <img
               src={form.user?.avatarUrl || UserImg}
-              className="w-10 h-10 rounded-full border-gray-300 border"
+              className="w-12 h-12 rounded-full border-gray-300 border"
             />
-            <p className="font-semibold">{form.user?.displayName}</p>
-            {isAdminRole(form.user?.role.name) && (
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                {form.user?.role.name}
-              </span>
-            )}
+            <div className="flex flex-col">
+              <div className="flex space-x-2">
+                <p className="font-semibold">{form.user?.displayName}</p>
+                {isAdminRole(form.user?.role.name) && (
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                    {form.user?.role.name}
+                  </span>
+                )}
+              </div>
+              <p className="text-gray-500 text-sm">{form.createdAt}</p>
+            </div>
           </div>
           <TextareaField
             title="Nội dung"

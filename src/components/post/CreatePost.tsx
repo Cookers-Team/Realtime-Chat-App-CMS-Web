@@ -68,7 +68,7 @@ const CreatePost = ({ isVisible, setVisible, profile, onButtonClick }: any) => {
             <img
               src={profile?.avatarUrl || UserImg}
               alt="Profile"
-              className="w-10 h-10 rounded-full border-gray-300 border"
+              className="w-12 h-12 rounded-full border-gray-300 border"
             />
             <p className="font-semibold">{profile.displayName}</p>
             {isAdminRole(profile.role.name) && (
