@@ -28,7 +28,7 @@ const User = ({ profile }: any) => {
       align: "left",
       render: (item: any) => (
         <img
-          className="w-10 h-10 rounded-full border-gray-300 border"
+          className="w-10 object-cover h-10 rounded-full border-gray-300 border"
           src={item.avatarUrl ? item.avatarUrl : userImg}
         ></img>
       ),
@@ -102,7 +102,7 @@ const User = ({ profile }: any) => {
   useEffect(() => {
     const fetchRoles = async () => {
       const roleRes = await get(`/v1/role/list?isPaged=0`);
-      setRoles(roleRes.data);
+      setRoles(roleRes.data.content);
     };
     fetchRoles();
   }, []);

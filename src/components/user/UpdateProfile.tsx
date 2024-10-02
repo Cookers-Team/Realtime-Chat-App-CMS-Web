@@ -70,7 +70,7 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
         setIsChecked(false);
         const userRes = await get(`/v1/user/get/${userId}`);
         const roleRes = await get(`/v1/role/list?isPaged=0`);
-        setRoles(roleRes.data);
+        setRoles(roleRes.data.content);
         setForm({
           ...userRes.data,
           roleId: userRes.data.role,

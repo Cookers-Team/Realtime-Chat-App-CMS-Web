@@ -21,8 +21,8 @@ const Notification = () => {
   }, []);
 
   const fetchNotifications = async () => {
-    const res = await get("/v1/notification/list");
-    setNotifications(res.data);
+    const res = await get("/v1/notification/list?isPaged=0&getMyNotifications=1");
+    setNotifications(res.data.content);
   };
 
   const markAsRead = async (id: string) => {

@@ -98,8 +98,8 @@ const Post = ({ profile }: any) => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const res = await get("/v1/user/list?isPaged=0");
-      setUsers(res.data);
+      const res = await get("/v1/user/list?isPaged=0&sort=displayName,asc");
+      setUsers(res.data.content);
     };
     fetchUsers();
   }, []);
