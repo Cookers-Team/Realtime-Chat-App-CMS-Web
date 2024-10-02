@@ -29,18 +29,19 @@ const Home = () => {
   const handleLogout = () => {
     hideDialog();
     localStorage.removeItem("accessToken");
-    window.location.reload();
+    getProfile();
   };
 
   const handleLogoutDialog = () => {
     showDialog();
   };
 
+  const getProfile = async () => {
+    const res = await get("/v1/user/profile");
+    setProfile(res.data);
+  };
+
   useEffect(() => {
-    const getProfile = async () => {
-      const res = await get("/v1/user/profile");
-      setProfile(res.data);
-    };
     getProfile();
   }, []);
 
