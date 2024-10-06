@@ -1,4 +1,4 @@
-import { LockIcon, MailIcon } from "lucide-react";
+import { LockIcon, MailIcon, UserCircleIcon } from "lucide-react";
 import InputField from "../components/InputField";
 import { useState } from "react";
 import useForm from "../hooks/useForm";
@@ -13,8 +13,8 @@ const Login = () => {
 
   const validate = (form: any) => {
     const newErrors: any = {};
-    if (!form.email.trim()) {
-      newErrors.email = "Email không được bỏ trống";
+    if (!form.username.trim()) {
+      newErrors.username = "Tài khoản không được bỏ trống";
     }
     if (!form.password) {
       newErrors.password = "Mật khẩu không được bỏ trống";
@@ -23,8 +23,8 @@ const Login = () => {
   };
 
   const { form, errors, handleChange, isValidForm } = useForm(
-    { email: "", password: "" },
-    { email: "", password: "" },
+    { username: "", password: "" },
+    { username: "", password: "" },
     validate
   );
 
@@ -46,13 +46,13 @@ const Login = () => {
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
         <h2 className="text-2xl font-bold text-center mb-6">Đăng nhập</h2>
         <InputField
-          title="Email đăng nhập"
+          title="Tài khoản đăng nhập"
           isRequire={true}
-          placeholder="Nhập địa chỉ email"
-          onChangeText={(value: any) => handleChange("email", value)}
-          value={form.email}
-          icon={MailIcon}
-          error={errors.email}
+          placeholder="Nhập email, SĐT hoặc MSSV"
+          onChangeText={(value: any) => handleChange("username", value)}
+          value={form.username}
+          icon={UserCircleIcon}
+          error={errors.username}
         />
         <InputField
           title="Mật khẩu"

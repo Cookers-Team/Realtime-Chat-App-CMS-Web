@@ -1,9 +1,4 @@
-import {
-  UserIcon,
-  ShieldEllipsisIcon,
-  FileTextIcon,
-  MessageSquareMoreIcon,
-} from "lucide-react";
+import { UserIcon, ShieldEllipsisIcon, FileTextIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import User from "./User";
 import Post from "./Post";
@@ -14,7 +9,6 @@ import { ToastContainer } from "react-toastify";
 import useDialog from "../hooks/useDialog";
 import Sidebar from "../components/Sidebar";
 import UpdateProfile from "../components/user/UpdateProfile";
-import Conversation from "./Conversation";
 
 const Home = () => {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -48,11 +42,6 @@ const Home = () => {
   const menuItems = [
     { name: "user", label: "Quản lý người dùng", icon: <UserIcon size={20} /> },
     {
-      name: "conversation",
-      label: "Quản lý cuộc trò chuyện",
-      icon: <MessageSquareMoreIcon size={20} />,
-    },
-    {
       name: "post",
       label: "Quản lý bài đăng",
       icon: <FileTextIcon size={20} />,
@@ -71,8 +60,6 @@ const Home = () => {
         return <User profile={profile} />;
       case "post":
         return <Post profile={profile} />;
-      case "conversation":
-        return <Conversation profile={profile} />;
       case "role":
         return <Role profile={profile} />;
       default:

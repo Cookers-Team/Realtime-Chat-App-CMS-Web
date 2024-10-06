@@ -78,7 +78,7 @@ const Role = ({ profile }: any) => {
   return (
     <>
       <Header
-        createDisabled={!profile.isSuperAdmin}
+        createDisabled={true}
         onCreate={() => {
           setCreateModalVisible(true);
         }}
