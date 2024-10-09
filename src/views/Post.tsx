@@ -12,6 +12,15 @@ import useDialog from "../hooks/useDialog";
 import { toast } from "react-toastify";
 import PostDetail from "../components/post/PostDetail";
 import Breadcrumb from "../components/Breadcrumb";
+import {
+  CircleCheckBigIcon,
+  CircleXIcon,
+  ClockAlertIcon,
+  ClockIcon,
+  EarthIcon,
+  LockIcon,
+  UsersIcon,
+} from "lucide-react";
 
 const Post = ({ profile }: any) => {
   const { isDialogVisible, showDialog, hideDialog } = useDialog();
@@ -71,6 +80,72 @@ const Post = ({ profile }: any) => {
       label: "Ngày đăng",
       accessor: "createdAt",
       align: "center",
+    },
+    {
+      label: "Loại",
+      accessor: "kind",
+      align: "center",
+      render: (item: any) => (
+        <span
+          className={`inline-flex items-center gap-1 px-2 py-1 rounded-md ${
+            item.kind === 1
+              ? "bg-green-100 text-blue-800"
+              : item.kind === 2
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800"
+          }`}
+        >
+          {item.kind === 1 ? (
+            <>
+              <EarthIcon size={16} />
+              Công khai
+            </>
+          ) : item.kind === 2 ? (
+            <>
+              <UsersIcon size={16} />
+              Bạn bè
+            </>
+          ) : (
+            <>
+              <LockIcon size={16} />
+              Riêng tư
+            </>
+          )}
+        </span>
+      ),
+    },
+    {
+      label: "Trạng thái",
+      accessor: "status",
+      align: "center",
+      render: (item: any) => (
+        <span
+          className={`inline-flex items-center gap-1 px-2 py-1 rounded-md ${
+            item.status === 1
+              ? "bg-yellow-100 text-yellow-800"
+              : item.status === 2
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800"
+          }`}
+        >
+          {item.status === 1 ? (
+            <>
+              <ClockIcon size={16} />
+              Chờ duyệt
+            </>
+          ) : item.status === 2 ? (
+            <>
+              <CircleCheckBigIcon size={16} />
+              Chấp nhận
+            </>
+          ) : (
+            <>
+              <CircleXIcon size={16} />
+              Từ chối
+            </>
+          )}
+        </span>
+      ),
     },
   ];
 

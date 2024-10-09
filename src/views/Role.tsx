@@ -20,6 +20,24 @@ const Role = ({ profile }: any) => {
   const columns = [
     { label: "Tên vai trò", accessor: "name", align: "left" },
     {
+      label: "Loại",
+      accessor: "kind",
+      align: "center",
+      render: (item: any) => (
+        <span
+          className={`px-2 py-1 rounded-md ${
+            item.kind === 1
+              ? "bg-blue-100 text-blue-800"
+              : item.kind === 2
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800"
+          }`}
+        >
+          {item.kind === 1 ? "Cấp 1" : item.kind === 2 ? "Cấp 2" : "Cấp 3"}
+        </span>
+      ),
+    },
+    {
       label: "Ngày cập nhật",
       accessor: "updatedAt",
       align: "center",
