@@ -23,7 +23,7 @@ const Home = () => {
   const handleLogout = () => {
     hideDialog();
     localStorage.removeItem("accessToken");
-    getProfile();
+    window.location.reload();
   };
 
   const handleLogoutDialog = () => {

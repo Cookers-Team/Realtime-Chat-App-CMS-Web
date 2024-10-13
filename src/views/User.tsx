@@ -34,8 +34,9 @@ const User = ({ profile }: any) => {
       ),
     },
     { label: "Tên hiển thị", accessor: "displayName", align: "left" },
-    { label: "Email", accessor: "email", align: "left" },
-    { label: "Số điện thoại", accessor: "phone", align: "left" },
+    { label: "Địa chỉ email", accessor: "email", align: "left" },
+    { label: "Mã sinh viên", accessor: "studentId", align: "center" },
+    { label: "Số điện thoại", accessor: "phone", align: "center" },
     {
       label: "Vai trò",
       accessor: "role",
