@@ -3,7 +3,6 @@ import { MessageCircleIcon, HeartIcon } from "lucide-react";
 import { getRandomColor } from "../../types/utils";
 import useFetch from "../../hooks/useFetch";
 import UserImg from "../../assets/user_icon.png";
-import Loading from "../../views/Loading";
 import { LoadingDialog } from "../Dialog";
 
 const PostDetail = ({ postId, profile }: any) => {
@@ -83,7 +82,6 @@ const PostDetail = ({ postId, profile }: any) => {
           </span>
         </div>
 
-        {/* Comments section */}
         <div className="mt-4">
           <h3 className="font-bold text-lg mb-2">Bình luận</h3>
           {comments.map((comment, index) => (
@@ -99,18 +97,6 @@ const PostDetail = ({ postId, profile }: any) => {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Add comment form */}
-        <div className="mt-4 flex">
-          <input
-            type="text"
-            placeholder="Viết bình luận..."
-            className="flex-grow border rounded-full py-2 px-4 mr-2"
-          />
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600">
-            Gửi
-          </button>
         </div>
       </div>
       <LoadingDialog isVisible={loading} />

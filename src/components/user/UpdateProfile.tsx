@@ -5,6 +5,7 @@ import {
   InfoIcon,
   PhoneIcon,
   ShieldEllipsisIcon,
+  IdCardIcon,
 } from "lucide-react";
 import InputField from "../InputField";
 import useForm from "../../hooks/useForm";
@@ -18,7 +19,7 @@ import { toast } from "react-toastify";
 import ChangePassword from "./ChangePassword";
 import CustomModal from "../CustomModal";
 
-const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
+const UpdateProfile = ({ isVisible, setVisible, userId, onUpdate }: any) => {
   const [isChecked, setIsChecked] = useState(false);
   const [roles, setRoles] = useState([]);
   const [avatarPreview, setAvatarPreview] = useState<any>(null);
@@ -35,9 +36,11 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
       newErrors.phone = "Số điện thoại không hợp lệ";
     if (!form.roleId.trim()) newErrors.roleId = "Vai trò không được bỏ trống";
     if (isChecked) {
-      if (!form.password || form.password.length < 6)
-        newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự";
-      if (form.confirmPassword !== form.password)
+      if (!form.currentPassword.trim())
+        newErrors.currentPassword = "Mật khẩu hiện tại không được bỏ trống";
+      if (!form.newPassword || form.newPassword.length < 6)
+        newErrors.newPassword = "Mật khẩu mới phải có ít nhất 6 ký tự";
+      if (form.confirmPassword !== form.newPassword)
         newErrors.confirmPassword = "Mật khẩu xác nhận không trùng khớp";
     }
     return newErrors;
@@ -49,12 +52,14 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
         displayName: "",
         email: "",
         phone: "",
+        studentId: "",
         birthDate: "",
         bio: "",
         avatarUrl: null,
         roleId: "",
-        password: "",
-        confirmPassword: "",
+        currentPassword: null,
+        newPassword: null,
+        confirmPassword: null,
       },
       {},
       validate
@@ -75,6 +80,9 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
           ...userRes.data,
           roleId: userRes.data.role,
           password: null,
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
           birthDate: userRes.data.birthDate
             ? getDate(userRes.data.birthDate)
             : null,
@@ -98,17 +106,18 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
       const updatedForm = {
         ...form,
         birthDate: form.birthDate ? `${form.birthDate} 07:00:00` : null,
-        password: form.password || null,
+        currentPassword: (isChecked && form.currentPassword) || null,
+        newPassword: (isChecked && form.newPassword) || null,
         status: 1,
         avatarUrl: avatarPreview
           ? await uploadImage(avatarPreview, post)
           : form.avatarUrl,
       };
-      const res = await put("/v1/user/update", updatedForm);
+      const res = await put("/v1/user/update-profile", updatedForm);
       if (res.result) {
         toast.success("Cập nhật thành công");
         setVisible(false);
-        window.location.reload();
+        onUpdate();
       } else {
         toast.error(res.message);
       }
@@ -157,6 +166,7 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
             icon={InfoIcon}
           />
           <InputField
+            editable={false}
             title="Email"
             isRequire
             placeholder="Nhập địa chỉ email"
@@ -166,6 +176,7 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
             error={errors.email}
           />
           <InputField
+            editable={false}
             title="Số điện thoại"
             isRequire
             placeholder="Nhập số điện thoại"
@@ -173,6 +184,16 @@ const UpdateProfile = ({ isVisible, setVisible, userId }: any) => {
             onChangeText={(value: any) => handleChange("phone", value)}
             icon={PhoneIcon}
             error={errors.phone}
+          />
+          <InputField
+            editable={false}
+            title="Mã sinh viên"
+            isRequire
+            placeholder="Nhập mã sinh viên"
+            value={form.studentId}
+            onChangeText={(value: any) => handleChange("studentId", value)}
+            icon={IdCardIcon}
+            error={errors.studentId}
           />
           <DatePickerField
             title="Ngày sinh"

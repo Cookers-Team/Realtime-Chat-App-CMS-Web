@@ -10,11 +10,15 @@ import InputBox from "../components/InputBox";
 import SelectBox from "../components/SelectBox";
 import UpdateUser from "../components/user/UpdateUser";
 import CreateUser from "../components/user/CreateUser";
+import Sidebar from "../components/Sidebar";
+import VerifyEdit from "../components/user/VerifyEdit";
 
 const User = ({ profile }: any) => {
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [createModalVisible, setCreateModalVisible] = useState(false);
+  const [verifyEditModalVisible, setVerifyEditModalVisible] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [userPhone, setUserPhone] = useState(null);
   const { isDialogVisible, showDialog, hideDialog } = useDialog();
   const [deleteId, setDeleteId] = useState(null);
   const [data, setData] = useState([]);
@@ -34,9 +38,32 @@ const User = ({ profile }: any) => {
       ),
     },
     { label: "Tên hiển thị", accessor: "displayName", align: "left" },
-    { label: "Địa chỉ email", accessor: "email", align: "left" },
-    { label: "Mã sinh viên", accessor: "studentId", align: "center" },
-    { label: "Số điện thoại", accessor: "phone", align: "center" },
+    {
+      label: "Địa chỉ email",
+      accessor: "email",
+      align: "left",
+      render: (item: any) => (
+        <span>
+          {profile.role.kind === 3 ? item.email : "********************"}
+        </span>
+      ),
+    },
+    {
+      label: "Mã sinh viên",
+      accessor: "studentId",
+      align: "center",
+      render: (item: any) => (
+        <span>{profile.role.kind === 3 ? item.studentId : "********"}</span>
+      ),
+    },
+    {
+      label: "Số điện thoại",
+      accessor: "phone",
+      align: "center",
+      render: (item: any) => (
+        <span>{profile.role.kind === 3 ? item.phone : "**********"}</span>
+      ),
+    },
     {
       label: "Vai trò",
       accessor: "role",
@@ -60,8 +87,8 @@ const User = ({ profile }: any) => {
       ),
     },
     {
-      label: "Ngày tạo",
-      accessor: "createdAt",
+      label: "Truy cập",
+      accessor: "lastLogin",
       align: "center",
     },
   ];
@@ -154,89 +181,107 @@ const User = ({ profile }: any) => {
     setTotalPages(userRes.data.totalPages);
   };
 
+  const handleVerifyEdit = () => {
+    setUserPhone(null);
+    setVerifyEditModalVisible(false);
+    setUpdateModalVisible(true);
+  };
+
   return (
     <>
-      <Header
-        onCreate={() => {
-          setCreateModalVisible(true);
-        }}
-        onClear={handleClear}
-        onSearch={handleRefreshData}
-        SearchBoxes={
+      <Sidebar
+        activeItem="user"
+        renderContent={
           <>
-            <InputBox
-              value={searchValues.displayName}
-              onChangeText={(value: any) =>
-                setSearchValues({ ...searchValues, displayName: value })
+            <Header
+              onCreate={() => {
+                setCreateModalVisible(true);
+              }}
+              onClear={handleClear}
+              onSearch={handleRefreshData}
+              SearchBoxes={
+                <>
+                  <InputBox
+                    value={searchValues.displayName}
+                    onChangeText={(value: any) =>
+                      setSearchValues({ ...searchValues, displayName: value })
+                    }
+                    placeholder="Tên hiển thị..."
+                  />
+                  <InputBox
+                    value={searchValues.email}
+                    onChangeText={(value: any) =>
+                      setSearchValues({ ...searchValues, email: value })
+                    }
+                    placeholder="Địa chỉ email..."
+                  />
+                  <InputBox
+                    value={searchValues.phone}
+                    onChangeText={(value: any) =>
+                      setSearchValues({ ...searchValues, phone: value })
+                    }
+                    placeholder="Số điện thoại..."
+                  />
+                  {roles && (
+                    <SelectBox
+                      onChange={(value: any) =>
+                        setSearchValues({
+                          ...searchValues,
+                          role: value,
+                        })
+                      }
+                      value={searchValues.role}
+                      placeholder="Vai trò..."
+                      options={roles}
+                      labelKey="name"
+                      valueKey="_id"
+                    />
+                  )}
+                  <SelectBox
+                    onChange={(value: any) =>
+                      setSearchValues({
+                        ...searchValues,
+                        status: value,
+                      })
+                    }
+                    placeholder="Trạng thái..."
+                    options={[
+                      { value: "0", name: "Chưa kích hoạt" },
+                      { value: "1", name: "Hoạt động" },
+                    ]}
+                    labelKey="name"
+                    valueKey="value"
+                  />
+                </>
               }
-              placeholder="Tên hiển thị..."
             />
-            <InputBox
-              value={searchValues.email}
-              onChangeText={(value: any) =>
-                setSearchValues({ ...searchValues, email: value })
-              }
-              placeholder="Địa chỉ email..."
-            />
-            <InputBox
-              value={searchValues.phone}
-              onChangeText={(value: any) =>
-                setSearchValues({ ...searchValues, phone: value })
-              }
-              placeholder="Số điện thoại..."
-            />
-            {roles && (
-              <SelectBox
-                onChange={(value: any) =>
-                  setSearchValues({
-                    ...searchValues,
-                    role: value,
-                  })
+            <Table
+              data={data}
+              columns={columns}
+              currentPage={currentPage}
+              itemsPerPage={itemsPerPage}
+              onPageChange={handlePageChange}
+              totalPages={totalPages}
+              onEdit={(data: { id: any; phone: any }) => {
+                setUserId(data.id);
+                if (profile.role.kind === 3) {
+                  setUpdateModalVisible(true);
+                } else {
+                  setUserPhone(data.phone);
+                  setVerifyEditModalVisible(true);
                 }
-                value={searchValues.role}
-                placeholder="Vai trò..."
-                options={roles}
-                labelKey="name"
-                valueKey="_id"
-              />
-            )}
-            <SelectBox
-              onChange={(value: any) =>
-                setSearchValues({
-                  ...searchValues,
-                  status: value,
-                })
+              }}
+              onDelete={(id: any) => {
+                handleDeleteDialog(id);
+              }}
+              disableEditCondition={(item: any) =>
+                item.isSuperAdmin || item._id === profile._id
               }
-              placeholder="Trạng thái..."
-              options={[
-                { value: "0", name: "Chưa kích hoạt" },
-                { value: "1", name: "Hoạt động" },
-              ]}
-              labelKey="name"
-              valueKey="value"
+              disableDeleteCondition={(item: any) =>
+                item.isSuperAdmin || item._id === profile._id
+              }
             />
           </>
-        }
-      />
-      <Table
-        data={data}
-        columns={columns}
-        currentPage={currentPage}
-        itemsPerPage={itemsPerPage}
-        onPageChange={handlePageChange}
-        totalPages={totalPages}
-        onEdit={(id: any) => {
-          setUserId(id);
-          setUpdateModalVisible(true);
-        }}
-        onDelete={(id: any) => {
-          handleDeleteDialog(id);
-        }}
-        disableEditCondition={(item: any) =>
-          item.isSuperAdmin || item._id === profile._id
-        }
-        disableDeleteCondition={(item: any) =>
-          item.isSuperAdmin || item._id === profile._id
         }
       />
       <LoadingDialog isVisible={loading} />
@@ -255,6 +300,12 @@ const User = ({ profile }: any) => {
         userId={userId}
         roles={roles}
         onButtonClick={handleClear}
+      />
+      <VerifyEdit
+        isVisible={verifyEditModalVisible}
+        setVisible={setVerifyEditModalVisible}
+        phone={userPhone}
+        onButtonClick={handleVerifyEdit}
       />
       <CreateUser
         isVisible={createModalVisible}

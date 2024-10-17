@@ -1,7 +1,7 @@
 import InputField from "../InputField";
 import { LockIcon, ShieldCheckIcon } from "lucide-react";
 
-const ChangePassword = ({
+const ChangePasswordAdmin = ({
   form,
   errors,
   handleChange,
@@ -36,25 +36,13 @@ const ChangePassword = ({
       {isChecked && (
         <div className="border border-gray-200 rounded-lg p-4 space-y-4">
           <InputField
-            title="Mật khẩu hiện tại"
-            isRequire={true}
-            placeholder="Nhập mật khẩu hiện tại"
-            onChangeText={(value: any) =>
-              handleChange("currentPassword", value)
-            }
-            value={form.currentPassword}
-            icon={LockIcon}
-            error={errors.currentPassword}
-            secureTextEntry={true}
-          />
-          <InputField
             title="Mật khẩu mới"
             isRequire={true}
             placeholder="Nhập mật khẩu mới"
-            onChangeText={(value: any) => handleChange("newPassword", value)}
-            value={form.newPassword}
+            onChangeText={(value: any) => handleChange("password", value)}
+            value={form.password}
             icon={LockIcon}
-            error={errors.newPassword}
+            error={errors.password}
             secureTextEntry={true}
           />
           <InputField
@@ -75,4 +63,4 @@ const ChangePassword = ({
   );
 };
 
-export default ChangePassword;
+export default ChangePasswordAdmin;

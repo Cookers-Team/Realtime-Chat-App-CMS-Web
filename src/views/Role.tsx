@@ -7,6 +7,7 @@ import InputBox from "../components/InputBox";
 import CreateRole from "../components/role/CreateRole";
 import UpdateRole from "../components/role/UpdateRole";
 import { isAdminRole } from "../types/utils";
+import Sidebar from "../components/Sidebar";
 
 const Role = ({ profile }: any) => {
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
@@ -95,38 +96,42 @@ const Role = ({ profile }: any) => {
 
   return (
     <>
-      <Header
-        createDisabled={true}
-        onCreate={() => {
-          setCreateModalVisible(true);
-        }}
-        onSearch={handleRefreshData}
-        onClear={handleClear}
-        SearchBoxes={
+      <Sidebar
+        activeItem="role"
+        renderContent={
           <>
-            <InputBox
-              value={searchValues.name}
-              onChangeText={(value: any) =>
-                setSearchValues({ ...searchValues, name: value })
+            <Header
+              createDisabled={true}
+              onCreate={() => {
+                setCreateModalVisible(true);
+              }}
+              onSearch={handleRefreshData}
+              onClear={handleClear}
+              SearchBoxes={
+                <>
+                  <InputBox
+                    value={searchValues.name}
+                    onChangeText={(value: any) =>
+                      setSearchValues({ ...searchValues, name: value })
+                    }
+                    placeholder="Tên vai trò..."
+                  />
+                </>
               }
-              placeholder="Tên vai trò..."
+            />
+            <Table
+              data={data}
+              columns={columns}
+              currentPage={currentPage}
+              itemsPerPage={itemsPerPage}
+              onPageChange={handlePageChange}
+              totalPages={totalPages}
+              onEdit={(id: any) => {
+                setRoleId(id);
+                setUpdateModalVisible(true);
+              }}
             />
           </>
-        }
-      />
-      <Table
-        data={data}
-        columns={columns}
-        currentPage={currentPage}
-        itemsPerPage={itemsPerPage}
-        onPageChange={handlePageChange}
-        totalPages={totalPages}
-        onEdit={(id: any) => {
-          setRoleId(id);
-          setUpdateModalVisible(true);
-        }}
-        disableEditCondition={(item: any) =>
-          isAdminRole(item.name) && !profile.isSuperAdmin
         }
       />
       <LoadingDialog isVisible={loading} />

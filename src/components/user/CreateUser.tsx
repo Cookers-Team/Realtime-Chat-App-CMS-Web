@@ -8,10 +8,15 @@ import {
   SparklesIcon,
   LockIcon,
   ShieldCheckIcon,
+  IdCardIcon,
 } from "lucide-react";
 import InputField from "../InputField";
 import useForm from "../../hooks/useForm";
-import { EmailPattern, PhonePattern } from "../../types/constant";
+import {
+  EmailPattern,
+  PhonePattern,
+  StudentIdPattern,
+} from "../../types/constant";
 import useFetch from "../../hooks/useFetch";
 import UserIcon from "../../assets/user_icon.png";
 import SelectField from "../SelectField";
@@ -33,6 +38,10 @@ const CreateUser = ({ isVisible, setVisible, roles, onButtonClick }: any) => {
     if (!form.phone) newErrors.phone = "Số điện thoại không được bỏ trống";
     else if (!PhonePattern.test(form.phone))
       newErrors.phone = "Số điện thoại không hợp lệ";
+    if (!form.studentId)
+      newErrors.studentId = "Mã sinh viên không được bỏ trống";
+    else if (!StudentIdPattern.test(form.studentId))
+      newErrors.studentId = "Mã sinh viên không hợp lệ";
     if (!form.roleId.trim()) newErrors.roleId = "Vai trò không được bỏ trống";
     if (!form.status) newErrors.status = "Trạng thái không được bỏ trống";
     if (!form.password || form.password.length < 6)
@@ -50,6 +59,7 @@ const CreateUser = ({ isVisible, setVisible, roles, onButtonClick }: any) => {
         phone: "",
         birthDate: "",
         bio: "",
+        studentId: "",
         avatarUrl: null,
         roleId: "",
         status: "",
@@ -76,6 +86,7 @@ const CreateUser = ({ isVisible, setVisible, roles, onButtonClick }: any) => {
       displayName: "",
       email: "",
       phone: "",
+      studentId: "",
       birthDate: "",
       bio: "",
       avatarUrl: null,
@@ -91,6 +102,7 @@ const CreateUser = ({ isVisible, setVisible, roles, onButtonClick }: any) => {
     if (isValidForm()) {
       const createForm = {
         ...form,
+        role: form.roleId,
         birthDate: form.birthDate ? `${form.birthDate} 07:00:00` : null,
         avatarUrl: avatarPreview
           ? await uploadImage(avatarPreview, post)
@@ -166,6 +178,15 @@ const CreateUser = ({ isVisible, setVisible, roles, onButtonClick }: any) => {
             onChangeText={(value: any) => handleChange("phone", value)}
             icon={PhoneIcon}
             error={errors.phone}
+          />
+          <InputField
+            title="Mã sinh viên"
+            isRequire
+            placeholder="Nhập mã sinh viên"
+            value={form.studentId}
+            onChangeText={(value: any) => handleChange("studentId", value)}
+            icon={IdCardIcon}
+            error={errors.studentId}
           />
           <DatePickerField
             title="Ngày sinh"

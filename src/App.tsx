@@ -4,11 +4,14 @@ import Login from "./views/Login";
 import Loading from "./views/Loading";
 import useFetch from "./hooks/useFetch";
 import NotFound from "./views/NotFound";
-import Home from "./views/Home";
+import User from "./views/User";
+import Post from "./views/Post";
+import Role from "./views/Role";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { post, loading } = useFetch();
+  const [profile, setProfile] = useState(null);
+  const { get, post, loading } = useFetch();
 
   useEffect(() => {
     const checkToken = async () => {
@@ -21,6 +24,11 @@ const App = () => {
         setIsAuthenticated(false);
       }
     };
+    const getProfile = async () => {
+      const res = await get("/v1/user/profile");
+      setProfile(res.data);
+    };
+    getProfile();
     checkToken();
   }, []);
 
@@ -34,7 +42,9 @@ const App = () => {
             <Routes>
               {isAuthenticated ? (
                 <>
-                  <Route path="/" element={<Home />} />
+                  <Route path="/" element={<User profile={profile} />} />
+                  <Route path="/post" element={<Post profile={profile} />} />
+                  <Route path="/role" element={<Role profile={profile} />} />
                 </>
               ) : (
                 <>

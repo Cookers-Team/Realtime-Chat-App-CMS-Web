@@ -6,18 +6,23 @@ import {
   PhoneIcon,
   ShieldEllipsisIcon,
   SparklesIcon,
+  IdCardIcon,
 } from "lucide-react";
 import InputField from "../InputField";
 import useForm from "../../hooks/useForm";
-import { EmailPattern, PhonePattern } from "../../types/constant";
+import {
+  EmailPattern,
+  PhonePattern,
+  StudentIdPattern,
+} from "../../types/constant";
 import useFetch from "../../hooks/useFetch";
 import UserIcon from "../../assets/user_icon.png";
 import SelectField from "../SelectField";
 import { getDate, uploadImage } from "../../types/utils";
 import DatePickerField from "../DatePickerField";
 import { toast } from "react-toastify";
-import ChangePassword from "./ChangePassword";
 import CustomModal from "../CustomModal";
+import ChangePasswordAdmin from "./ChangePasswordAdmin";
 
 const UpdateUser = ({
   isVisible,
@@ -39,8 +44,13 @@ const UpdateUser = ({
     if (!form.phone) newErrors.phone = "Số điện thoại không được bỏ trống";
     else if (!PhonePattern.test(form.phone))
       newErrors.phone = "Số điện thoại không hợp lệ";
+    if (!form.studentId)
+      newErrors.studentId = "Mã sinh viên không được bỏ trống";
+    else if (!StudentIdPattern.test(form.studentId))
+      newErrors.studentId = "Mã sinh viên không hợp lệ";
     if (!form.roleId.trim()) newErrors.roleId = "Vai trò không được bỏ trống";
-    if (!form.status) newErrors.status = "Trạng thái không được bỏ trống";
+    if (form.status != 0 && form.status != 1)
+      newErrors.status = "Trạng thái không được bỏ trống";
     if (isChecked) {
       if (!form.password || form.password.length < 6)
         newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự";
@@ -58,6 +68,7 @@ const UpdateUser = ({
         phone: "",
         birthDate: "",
         bio: "",
+        studentId: "",
         avatarUrl: null,
         roleId: "",
         status: "",
@@ -103,6 +114,7 @@ const UpdateUser = ({
     if (isValidForm()) {
       const updatedForm = {
         ...form,
+        role: form.roleId,
         birthDate: form.birthDate ? `${form.birthDate} 07:00:00` : null,
         password: form.password || null,
         avatarUrl: avatarPreview
@@ -179,6 +191,15 @@ const UpdateUser = ({
             icon={PhoneIcon}
             error={errors.phone}
           />
+          <InputField
+            title="Mã sinh viên"
+            isRequire
+            placeholder="Nhập mã sinh viên"
+            value={form.studentId}
+            onChangeText={(value: any) => handleChange("studentId", value)}
+            icon={IdCardIcon}
+            error={errors.studentId}
+          />
           <DatePickerField
             title="Ngày sinh"
             value={form.birthDate}
@@ -211,7 +232,7 @@ const UpdateUser = ({
             icon={SparklesIcon}
             error={errors.status}
           />
-          <ChangePassword
+          <ChangePasswordAdmin
             form={form}
             errors={errors}
             handleChange={handleChange}

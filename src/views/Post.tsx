@@ -4,7 +4,6 @@ import { ConfimationDialog, LoadingDialog } from "../components/Dialog";
 import useFetch from "../hooks/useFetch";
 import Header from "../components/Header";
 import InputBox from "../components/InputBox";
-import userImg from "../assets/user_icon.png";
 import SelectBox from "../components/SelectBox";
 import CreatePost from "../components/post/CreatePost";
 import UpdatePost from "../components/post/UpdatePost";
@@ -15,17 +14,20 @@ import Breadcrumb from "../components/Breadcrumb";
 import {
   CircleCheckBigIcon,
   CircleXIcon,
-  ClockAlertIcon,
   ClockIcon,
   EarthIcon,
+  EditIcon,
   LockIcon,
   UsersIcon,
 } from "lucide-react";
+import Sidebar from "../components/Sidebar";
+import PostReview from "../components/post/PostReview";
 
 const Post = ({ profile }: any) => {
   const { isDialogVisible, showDialog, hideDialog } = useDialog();
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [createModalVisible, setCreateModalVisible] = useState(false);
+  const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const [postId, setPostId] = useState(null);
   const [users, setUsers] = useState(null);
   const [data, setData] = useState([]);
@@ -35,17 +37,6 @@ const Post = ({ profile }: any) => {
   const itemsPerPage = 10;
 
   const columns = [
-    {
-      label: "Ảnh",
-      accessor: "avatarUrl",
-      align: "left",
-      render: (item: any) => (
-        <img
-          className="w-10 h-10 rounded-full border-gray-300 border"
-          src={item.user.avatarUrl ? item.user.avatarUrl : userImg}
-        ></img>
-      ),
-    },
     {
       label: "Người đăng",
       accessor: "user",
@@ -61,7 +52,16 @@ const Post = ({ profile }: any) => {
           item.content.length > 100
             ? item.content.slice(0, 100) + "..."
             : item.content;
-        return <span>{content}</span>;
+        return (
+          <span>
+            {item.isUpdated === 1 && (
+              <span className="inline-block mr-2">
+                <EditIcon className="w-4 h-4 text-blue-500" />
+              </span>
+            )}
+            <span>{item.kind === 3 ? "********************" : content}</span>
+          </span>
+        );
       },
     },
     {
@@ -153,6 +153,8 @@ const Post = ({ profile }: any) => {
   const [searchValues, setSearchValues] = useState({
     content: "",
     user: "",
+    status: "",
+    kind: "",
   });
 
   const getData = async () => {
@@ -165,6 +167,12 @@ const Post = ({ profile }: any) => {
     }
     if (searchValues.user) {
       query.user = searchValues.user;
+    }
+    if (searchValues.status) {
+      query.status = searchValues.status;
+    }
+    if (searchValues.kind) {
+      query.kind = searchValues.kind;
     }
     const res = await get("/v1/post/list", query);
     setData(res.data.content);
@@ -209,7 +217,7 @@ const Post = ({ profile }: any) => {
   };
 
   const handleClear = async () => {
-    setSearchValues({ content: "", user: "" });
+    setSearchValues({ content: "", user: "", status: "", kind: "" });
     setCurrentPage(0);
     const res = await get("/v1/post/list", {
       page: 0,
@@ -221,70 +229,120 @@ const Post = ({ profile }: any) => {
 
   return (
     <>
-      <Breadcrumb
-        currentView={view}
-        setView={setView}
-        listLabel="Quản lý bài đăng"
-        detailLabel="Chi tiết bài đăng"
-      />
-      {view === "list" ? (
-        <>
-          <Header
-            onCreate={() => {
-              setCreateModalVisible(true);
-            }}
-            onSearch={handleRefreshData}
-            onClear={handleClear}
-            SearchBoxes={
+      <Sidebar
+        activeItem="post"
+        renderContent={
+          <>
+            <Breadcrumb
+              currentView={view}
+              setView={setView}
+              listLabel="Quản lý bài đăng"
+              detailLabel="Chi tiết bài đăng"
+            />
+            {view === "list" ? (
               <>
-                <InputBox
-                  value={searchValues.content}
-                  onChangeText={(value: any) =>
-                    setSearchValues({ ...searchValues, content: value })
+                <Header
+                  onCreate={() => {
+                    setCreateModalVisible(true);
+                  }}
+                  onSearch={handleRefreshData}
+                  onClear={handleClear}
+                  SearchBoxes={
+                    <>
+                      <InputBox
+                        value={searchValues.content}
+                        onChangeText={(value: any) =>
+                          setSearchValues({ ...searchValues, content: value })
+                        }
+                        placeholder="Nội dung bài viết..."
+                      />
+                      {users && (
+                        <SelectBox
+                          value={searchValues.user}
+                          placeholder="Người đăng..."
+                          options={users}
+                          labelKey="displayName"
+                          valueKey="_id"
+                          onChange={(value: any) =>
+                            setSearchValues({
+                              ...searchValues,
+                              user: value,
+                            })
+                          }
+                        />
+                      )}
+                      <SelectBox
+                        onChange={(value: any) =>
+                          setSearchValues({
+                            ...searchValues,
+                            kind: value,
+                          })
+                        }
+                        placeholder="Loại bài viết..."
+                        options={[
+                          { value: "1", name: "Công khai" },
+                          { value: "2", name: "Bạn bè" },
+                          { value: "3", name: "Riêng tư" },
+                        ]}
+                        labelKey="name"
+                        valueKey="value"
+                      />
+                      <SelectBox
+                        onChange={(value: any) =>
+                          setSearchValues({
+                            ...searchValues,
+                            status: value,
+                          })
+                        }
+                        placeholder="Trạng thái..."
+                        options={[
+                          { value: "1", name: "Chờ duyệt" },
+                          { value: "2", name: "Chấp nhận" },
+                          { value: "3", name: "Từ chối" },
+                        ]}
+                        labelKey="name"
+                        valueKey="value"
+                      />
+                    </>
                   }
-                  placeholder="Nội dung bài viết..."
                 />
-                {users && (
-                  <SelectBox
-                    value={searchValues.user}
-                    placeholder="Người đăng..."
-                    options={users}
-                    labelKey="displayName"
-                    valueKey="_id"
-                    onChange={(value: any) =>
-                      setSearchValues({
-                        ...searchValues,
-                        user: value,
-                      })
-                    }
-                  />
-                )}
+                <Table
+                  data={data}
+                  columns={columns}
+                  currentPage={currentPage}
+                  itemsPerPage={itemsPerPage}
+                  onPageChange={handlePageChange}
+                  totalPages={totalPages}
+                  onReview={(id: any) => {
+                    setPostId(id);
+                    setReviewModalVisible(true);
+                  }}
+                  onView={(id: any) => {
+                    setPostId(id);
+                    setView("detail");
+                  }}
+                  onEdit={(id: any) => {
+                    setPostId(id);
+                    setUpdateModalVisible(true);
+                  }}
+                  onDelete={(id: any) => {
+                    handleDeleteDialog(id);
+                  }}
+                  disableReviewCondition={(item: any) =>
+                    item.status !== 1 || item.kind === 3
+                  }
+                  disableEditCondition={(item: any) =>
+                    item.kind === 3 ||
+                    (item.isOwner === 0 && profile.role.kind !== 3)
+                  }
+                />
               </>
-            }
-          />
-          <Table
-            data={data}
-            columns={columns}
-            currentPage={currentPage}
-            itemsPerPage={itemsPerPage}
-            onPageChange={handlePageChange}
-            totalPages={totalPages}
-            onView={(id: any) => {
-              setPostId(id);
-              setView("detail");
-            }}
-            onEdit={(id: any) => {
-              setPostId(id);
-              setUpdateModalVisible(true);
-            }}
-            onDelete={(id: any) => {
-              handleDeleteDialog(id);
-            }}
-          />
-        </>
-      ) : (
-        <PostDetail postId={postId} />
-      )}
+            ) : (
+              <PostDetail postId={postId} />
+            )}
+          </>
+        }
+      />
       <ConfimationDialog
         isVisible={isDialogVisible}
         title="Xóa bài đăng"
@@ -295,6 +353,12 @@ const Post = ({ profile }: any) => {
         color="red"
       />
       <LoadingDialog isVisible={loading} />
+      <PostReview
+        isVisible={reviewModalVisible}
+        setVisible={setReviewModalVisible}
+        postId={postId}
+        onButtonClick={handleClear}
+      />
       <UpdatePost
         isVisible={updateModalVisible}
         setVisible={setUpdateModalVisible}

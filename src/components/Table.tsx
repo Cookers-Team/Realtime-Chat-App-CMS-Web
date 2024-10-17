@@ -1,4 +1,4 @@
-import { EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
+import { EyeIcon, PencilIcon, ShieldCheckIcon, TrashIcon } from "lucide-react";
 import Pagination from "./Pagination";
 import NoData from "./NoData";
 
@@ -12,8 +12,11 @@ const Table = ({
   onView,
   onEdit,
   onDelete,
+  onReview,
   disableEditCondition,
   disableDeleteCondition,
+  disableReviewCondition,
+  disableViewCondition,
 }: any) => {
   return (
     <div className="overflow-x-auto">
@@ -37,7 +40,7 @@ const Table = ({
               {data.map((item: any, index: any) => (
                 <tr
                   key={item._id || index}
-                  className="border-b hover:bg-blue-100 transition-colors duration-200"
+                  className="border-b hover:bg-blue-50 transition-colors duration-200"
                 >
                   <td className="p-4 text-center">
                     {index + 1 + currentPage * itemsPerPage}
@@ -51,10 +54,34 @@ const Table = ({
                     <div className="flex justify-center space-x-2">
                       {onView && (
                         <button
-                          className="text-green-500 p-1"
+                          className={`p-1 ${
+                            disableViewCondition && disableViewCondition(item)
+                              ? "text-gray-500 cursor-not-allowed"
+                              : "text-green-500"
+                          }`}
                           onClick={() => onView(item._id)}
+                          disabled={
+                            disableViewCondition && disableViewCondition(item)
+                          }
                         >
                           <EyeIcon size={16} />
+                        </button>
+                      )}
+                      {onReview && (
+                        <button
+                          className={`p-1 ${
+                            disableReviewCondition &&
+                            disableReviewCondition(item)
+                              ? "text-gray-500 cursor-not-allowed"
+                              : "text-purple-500"
+                          }`}
+                          onClick={() => onReview(item._id)}
+                          disabled={
+                            disableReviewCondition &&
+                            disableReviewCondition(item)
+                          }
+                        >
+                          <ShieldCheckIcon size={16} />
                         </button>
                       )}
                       {onEdit && (
@@ -64,7 +91,13 @@ const Table = ({
                               ? "text-gray-500 cursor-not-allowed"
                               : "text-blue-500"
                           }`}
-                          onClick={() => onEdit(item._id)}
+                          onClick={() =>
+                            onEdit(
+                              item.phone
+                                ? { id: item._id, phone: item.phone }
+                                : item._id
+                            )
+                          }
                           disabled={
                             disableEditCondition && disableEditCondition(item)
                           }
