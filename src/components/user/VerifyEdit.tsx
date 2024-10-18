@@ -38,7 +38,7 @@ const VerifyEdit = ({ isVisible, setVisible, phone, onButtonClick }: any) => {
   return (
     <CustomModal
       onClose={() => setVisible(false)}
-      title="Xét duyệt bài đăng"
+      title="Xác minh chỉnh sửa"
       bodyComponent={
         <InputField
           title="Số điện thoại của người dùng"
