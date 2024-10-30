@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   BellIcon,
+  ChartPieIcon,
   FileTextIcon,
   LogOutIcon,
   ShieldEllipsisIcon,
@@ -56,12 +57,17 @@ const Sidebar = ({ activeItem, renderContent }: any) => {
       icon: <FileTextIcon size={20} />,
       path: "/post",
     },
-
     {
       name: "role",
       label: "Quản lý quyền",
       icon: <ShieldEllipsisIcon size={20} />,
       path: "/role",
+    },
+    {
+      name: "statistic",
+      label: "Thống kê",
+      icon: <ChartPieIcon size={20} />,
+      path: "/statistic",
     },
   ];
   const handleMenuItemClick = (itemName: string) => {
