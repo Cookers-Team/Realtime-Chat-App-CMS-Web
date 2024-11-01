@@ -3,6 +3,7 @@ import {
   EyeIcon,
   PencilIcon,
   TrashIcon,
+  XCircleIcon,
 } from "lucide-react";
 import Pagination from "./Pagination";
 import NoData from "./NoData";
@@ -78,7 +79,9 @@ const Table = ({
                             disableReviewCondition &&
                             disableReviewCondition(item)
                               ? "text-gray-500 cursor-not-allowed"
-                              : "text-green-500"
+                              : item.status == 1
+                              ? "text-green-500"
+                              : "text-red-500"
                           }`}
                           onClick={() => onReview(item._id)}
                           disabled={
@@ -86,7 +89,11 @@ const Table = ({
                             disableReviewCondition(item)
                           }
                         >
-                          <CircleCheckBigIcon size={16} />
+                          {item.status == 1 ? (
+                            <CircleCheckBigIcon size={16} />
+                          ) : (
+                            <XCircleIcon size={16} />
+                          )}
                         </button>
                       )}
                       {onEdit && (
