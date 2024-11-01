@@ -161,6 +161,7 @@ const Post = ({ profile }: any) => {
     const query: any = {
       page: currentPage,
       size: itemsPerPage,
+      sortKind: 1,
     };
     if (searchValues.content) {
       query.content = searchValues.content;
@@ -220,6 +221,7 @@ const Post = ({ profile }: any) => {
     setSearchValues({ content: "", user: "", status: "", kind: "" });
     setCurrentPage(0);
     const res = await get("/v1/post/list", {
+      sortKind: 1,
       page: 0,
       size: itemsPerPage,
     });
@@ -242,9 +244,7 @@ const Post = ({ profile }: any) => {
             {view === "list" ? (
               <>
                 <Header
-                  onCreate={() => {
-                    setCreateModalVisible(true);
-                  }}
+                  createDisabled={true}
                   onSearch={handleRefreshData}
                   onClear={handleClear}
                   SearchBoxes={
@@ -317,24 +317,11 @@ const Post = ({ profile }: any) => {
                     setPostId(id);
                     setReviewModalVisible(true);
                   }}
-                  onView={(id: any) => {
-                    setPostId(id);
-                    setView("detail");
-                  }}
-                  onEdit={(id: any) => {
-                    setPostId(id);
-                    setUpdateModalVisible(true);
-                  }}
-                  onDelete={(id: any) => {
-                    handleDeleteDialog(id);
-                  }}
-                  disableReviewCondition={(item: any) =>
+                  disableEditCondition={(item: any) => true}
+                  disableDeleteCondition={(item: any) =>
                     item.status !== 1 || item.kind === 3
                   }
-                  disableEditCondition={(item: any) =>
-                    item.kind === 3 ||
-                    (item.isOwner === 0 && profile.role.kind !== 3)
-                  }
+                  disableReviewCondition={(item: any) => item.kind === 3}
                 />
               </>
             ) : (
