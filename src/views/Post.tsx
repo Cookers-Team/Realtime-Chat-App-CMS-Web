@@ -40,7 +40,7 @@ const Post = ({ profile }: any) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [view, setView] = useState("list");
-  const itemsPerPage = 6;
+  const itemsPerPage = 8;
 
   const columns = [
     {
@@ -68,7 +68,7 @@ const Post = ({ profile }: any) => {
             ? item.content.slice(0, 100) + "..."
             : item.content;
         return (
-          <div className="flex items-center gap-3 p-3">
+          <div className="flex items-center gap-3">
             <div className="flex-1">
               <div className="flex items-center gap-1 text-gray-600">
                 {item.isUpdated === 1 && (
