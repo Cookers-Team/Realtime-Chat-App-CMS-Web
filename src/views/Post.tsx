@@ -12,16 +12,22 @@ import { toast } from "react-toastify";
 import PostDetail from "../components/post/PostDetail";
 import Breadcrumb from "../components/Breadcrumb";
 import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
   CircleCheckBigIcon,
   CircleXIcon,
   ClockIcon,
   EarthIcon,
   EditIcon,
+  HeartIcon,
+  ImagesIcon,
   LockIcon,
+  MessageSquareIcon,
   UsersIcon,
 } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import PostReview from "../components/post/PostReview";
+import userImg from "../assets/user_icon.png";
 
 const Post = ({ profile }: any) => {
   const { isDialogVisible, showDialog, hideDialog } = useDialog();
@@ -34,14 +40,23 @@ const Post = ({ profile }: any) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [view, setView] = useState("list");
-  const itemsPerPage = 10;
+  const itemsPerPage = 6;
 
   const columns = [
     {
       label: "Người đăng",
       accessor: "user",
       align: "left",
-      render: (item: any) => <span>{item.user.displayName}</span>,
+      render: (item: any) => (
+        <span className="flex items-center space-x-2">
+          <img
+            src={item.user.avatarUrl || userImg}
+            alt="Avatar"
+            className="w-8 h-8 rounded-full"
+          />
+          <span>{item.user.displayName}</span>
+        </span>
+      ),
     },
     {
       label: "Nội dung",
@@ -53,28 +68,39 @@ const Post = ({ profile }: any) => {
             ? item.content.slice(0, 100) + "..."
             : item.content;
         return (
-          <span>
-            {item.isUpdated === 1 && (
-              <span className="inline-block mr-2">
-                <EditIcon className="w-4 h-4 text-blue-500" />
-              </span>
-            )}
-            <span>{item.kind === 3 ? "********************" : content}</span>
-          </span>
+          <div className="flex items-center gap-3 p-3">
+            <div className="flex-1">
+              <div className="flex items-center gap-1 text-gray-600">
+                {item.isUpdated === 1 && (
+                  <EditIcon className="w-4 h-4 text-blue-500 mr-1" />
+                )}
+                <div className="text-gray-800">
+                  {item.kind === 3 ? "********************" : content}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4 mt-2">
+                {item.imageUrls && (
+                  <div className="flex items-center gap-1 text-gray-600">
+                    <ImagesIcon className="w-4 h-4 text-emerald-500" />
+                    <span className="text-sm">{item.imageUrls.length}</span>
+                  </div>
+                )}
+
+                <div className="flex items-center gap-1 text-gray-600">
+                  <HeartIcon className="w-4 h-4 text-rose-500" />
+                  <span className="text-sm">{item.totalReactions}</span>
+                </div>
+
+                <div className="flex items-center gap-1 text-gray-600">
+                  <MessageSquareIcon className="w-4 h-4 text-indigo-500" />
+                  <span className="text-sm">{item.totalComments}</span>
+                </div>
+              </div>
+            </div>
+          </div>
         );
       },
-    },
-    {
-      label: "Yêu thích",
-      accessor: "likes",
-      align: "center",
-      render: (item: any) => <span>{item.totalReactions}</span>,
-    },
-    {
-      label: "Bình luận",
-      accessor: "comments",
-      align: "center",
-      render: (item: any) => <span>{item.totalComments}</span>,
     },
     {
       label: "Ngày đăng",

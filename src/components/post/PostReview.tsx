@@ -122,7 +122,7 @@ const ImageViewer = ({ image, onClose }: any) => {
       <img
         src={image}
         alt="Full size"
-        className="max-h-[90vh] max-w-[90vw] object-contain"
+        className="h-[90vh] w-[90vw] object-contain"
         onClick={(e) => e.stopPropagation()}
       />
     </div>
@@ -220,7 +220,6 @@ const PostReview = ({ isVisible, setVisible, postId, onButtonClick }: any) => {
         <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
           <div className="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl w-full">
-            {/* Header */}
             <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
@@ -243,7 +242,6 @@ const PostReview = ({ isVisible, setVisible, postId, onButtonClick }: any) => {
               </div>
             </div>
 
-            {/* Content */}
             <div className="px-6 py-4">
               <div className="flex flex-row text-base text-gray-900 whitespace-pre-wrap mb-4">
                 {post.isUpdated === 1 && (
@@ -289,7 +287,6 @@ const PostReview = ({ isVisible, setVisible, postId, onButtonClick }: any) => {
               )}
             </div>
 
-            {/* Footer */}
             <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
               {post.status === 1 ? (
                 <div className="flex justify-end space-x-3">
