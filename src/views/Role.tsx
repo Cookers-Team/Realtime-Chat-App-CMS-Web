@@ -129,9 +129,9 @@ const Role = ({ profile }: any) => {
                 setRoleId(id);
                 setUpdateModalVisible(true);
               }}
-              disableEditCondition={(item: any) => {
-                item.kind === 3;
-              }}
+              disableEditCondition={(item: any) =>
+                item.kind === 3 && profile.role.kind !== 3
+              }
             />
           </>
         }
