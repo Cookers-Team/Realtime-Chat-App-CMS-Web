@@ -6,7 +6,6 @@ import Header from "../components/Header";
 import InputBox from "../components/InputBox";
 import CreateRole from "../components/role/CreateRole";
 import UpdateRole from "../components/role/UpdateRole";
-import { isAdminRole } from "../types/utils";
 import Sidebar from "../components/Sidebar";
 
 const Role = ({ profile }: any) => {

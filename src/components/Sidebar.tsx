@@ -4,6 +4,7 @@ import {
   ChartPieIcon,
   FileTextIcon,
   LogOutIcon,
+  SettingsIcon,
   ShieldEllipsisIcon,
   UserIcon,
 } from "lucide-react";
@@ -62,6 +63,12 @@ const Sidebar = ({ activeItem, renderContent }: any) => {
       label: "Quản lý quyền",
       icon: <ShieldEllipsisIcon size={20} />,
       path: "/role",
+    },
+    {
+      name: "setting",
+      label: "Cài đặt",
+      icon: <SettingsIcon size={20} />,
+      path: "/setting",
     },
     {
       name: "statistic",

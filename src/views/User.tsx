@@ -275,10 +275,14 @@ const User = ({ profile }: any) => {
                 handleDeleteDialog(id);
               }}
               disableEditCondition={(item: any) =>
-                item.isSuperAdmin || item._id === profile._id
+                (profile.role.kind !== 3 && item.role.kind === 3) ||
+                item._id === profile._id ||
+                item.isSuperAdmin
               }
               disableDeleteCondition={(item: any) =>
-                item.isSuperAdmin || item._id === profile._id
+                (profile.role.kind !== 3 && item.role.kind === 3) ||
+                item._id === profile._id ||
+                item.isSuperAdmin
               }
             />
           </>
@@ -299,6 +303,7 @@ const User = ({ profile }: any) => {
         setVisible={setUpdateModalVisible}
         userId={userId}
         roles={roles}
+        profileRoleKind={profile?.role.kind}
         onButtonClick={handleClear}
       />
       <VerifyEdit

@@ -29,6 +29,7 @@ const UpdateUser = ({
   setVisible,
   userId,
   roles,
+  profileRoleKind,
   onButtonClick,
 }: any) => {
   const [isChecked, setIsChecked] = useState(false);
@@ -212,6 +213,7 @@ const UpdateUser = ({
             value={form.roleId}
             options={roles}
             isRequire
+            disabled={profileRoleKind !== 3}
             onChange={(value: any) => handleChange("roleId", value)}
             icon={ShieldEllipsisIcon}
             error={errors.roleId}
@@ -232,13 +234,15 @@ const UpdateUser = ({
             icon={SparklesIcon}
             error={errors.status}
           />
-          <ChangePasswordAdmin
-            form={form}
-            errors={errors}
-            handleChange={handleChange}
-            isChecked={isChecked}
-            setIsChecked={setIsChecked}
-          />
+          {profileRoleKind === 3 && (
+            <ChangePasswordAdmin
+              form={form}
+              errors={errors}
+              handleChange={handleChange}
+              isChecked={isChecked}
+              setIsChecked={setIsChecked}
+            />
+          )}
         </>
       }
       buttonText="LƯU"

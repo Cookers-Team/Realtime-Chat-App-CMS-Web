@@ -1,7 +1,11 @@
-import React from "react";
+import Sidebar from "../components/Sidebar";
 
-function Setting() {
-  return <div>Setting</div>;
-}
+const Setting = ({ profile }: any) => {
+  return (
+    <>
+      <Sidebar activeItem="setting" renderContent={<>Settings</>} />
+    </>
+  );
+};
 
 export default Setting;

@@ -8,6 +8,7 @@ import User from "./views/User";
 import Post from "./views/Post";
 import Role from "./views/Role";
 import Statistic from "./views/Statistic";
+import Setting from "./views/Setting";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -48,6 +49,10 @@ const App = () => {
                   <Route
                     path="/statistic"
                     element={<Statistic profile={profile} />}
+                  />
+                  <Route
+                    path="/setting"
+                    element={<Setting profile={profile} />}
                   />
                   <Route path="/role" element={<Role profile={profile} />} />
                 </>
