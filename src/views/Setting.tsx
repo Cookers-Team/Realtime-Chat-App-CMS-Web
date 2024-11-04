@@ -113,12 +113,12 @@ const Setting = ({ profile }: any) => {
   };
 
   const handleClear = async () => {
-    setSearchValues({ title: "", roleKind: "1" });
+    setSearchValues({ ...searchValues, title: "" });
     setCurrentPage(0);
     const res = await get("/v1/setting/list", {
       page: 0,
       size: itemsPerPage,
-      roleKind: "1",
+      roleKind: searchValues.roleKind,
     });
     setData(res.data.content);
     setTotalPages(res.data.totalPages);
