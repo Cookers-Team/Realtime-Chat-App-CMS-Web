@@ -16,6 +16,7 @@ const InputField = ({
   maxLength = 100,
   editable = true,
   multiline = false,
+  type = "text",
 }: any) => {
   return (
     <div className="mb-4">
@@ -37,7 +38,7 @@ const InputField = ({
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChangeText(e.target.value)}
-          type={secureTextEntry && !showPassword ? "password" : "text"}
+          type={secureTextEntry && !showPassword ? "password" : type}
           maxLength={maxLength}
           disabled={!editable || !!onPress}
           multiple={multiline}

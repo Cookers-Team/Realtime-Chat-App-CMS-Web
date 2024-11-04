@@ -8,9 +8,12 @@ import Sidebar from "../components/Sidebar";
 import SelectBox from "../components/SelectBox";
 import { CheckIcon, XIcon } from "lucide-react";
 import { settingKey } from "../types/constant";
+import UpdateSetting from "../components/setting/UpdateSetting";
 
 const Setting = ({ profile }: any) => {
   const [data, setData] = useState([]);
+  const [updateModalVisible, setUpdateModalVisible] = useState(false);
+  const [settingId, setSettingId] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const itemsPerPage = 10;
@@ -169,7 +172,8 @@ const Setting = ({ profile }: any) => {
               onPageChange={handlePageChange}
               totalPages={totalPages}
               onEdit={(id: any) => {
-                console.log("EDITED");
+                setSettingId(id);
+                setUpdateModalVisible(true);
               }}
               disableEditCondition={(item: any) =>
                 item.roleKind === 3 && profile.role.kind !== 3
@@ -179,6 +183,12 @@ const Setting = ({ profile }: any) => {
         }
       />
       <LoadingDialog isVisible={loading} />
+      <UpdateSetting
+        isVisible={updateModalVisible}
+        setVisible={setUpdateModalVisible}
+        settingId={settingId}
+        onButtonClick={handleClear}
+      />
     </>
   );
 };
