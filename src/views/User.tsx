@@ -194,6 +194,7 @@ const User = ({ profile }: any) => {
         renderContent={
           <>
             <Header
+              createDisabled={profile.role.kind !== 3}
               onCreate={() => {
                 setCreateModalVisible(true);
               }}
