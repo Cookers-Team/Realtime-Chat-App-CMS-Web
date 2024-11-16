@@ -1,7 +1,7 @@
 const ModalForm = ({ children, isVisible, color, title, message }: any) => {
   if (!isVisible) return null;
   return (
-    <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
+    <div className="fixed z-50 inset-0 flex justify-center items-center bg-black bg-opacity-50">
       <div className="bg-white rounded-lg p-6">
         <h2 className="text-xl font-bold mb-2" style={{ color }}>
           {title}

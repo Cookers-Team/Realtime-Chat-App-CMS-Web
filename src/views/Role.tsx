@@ -7,8 +7,10 @@ import InputBox from "../components/InputBox";
 import CreateRole from "../components/role/CreateRole";
 import UpdateRole from "../components/role/UpdateRole";
 import Sidebar from "../components/Sidebar";
+import { useGlobalContext } from "../types/context";
 
-const Role = ({ profile }: any) => {
+const Role = () => {
+  const { profile } = useGlobalContext();
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [roleId, setRoleId] = useState(null);

@@ -12,8 +12,10 @@ import UpdateUser from "../components/user/UpdateUser";
 import CreateUser from "../components/user/CreateUser";
 import Sidebar from "../components/Sidebar";
 import VerifyEdit from "../components/user/VerifyEdit";
+import { useGlobalContext } from "../types/context";
 
-const User = ({ profile }: any) => {
+const User = () => {
+  const { profile } = useGlobalContext();
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [verifyEditModalVisible, setVerifyEditModalVisible] = useState(false);

@@ -93,9 +93,7 @@ const ConversationStatistic = () => {
       <div>
         <p className="text-gray-500 text-sm">{title}</p>
         <p className="text-xl font-bold text-gray-800">{value}</p>
-        <p className="text-xs text-gray-400">
-          Trung bình: {subValue} / ngày
-        </p>
+        <p className="text-xs text-gray-400">Trung bình: {subValue} / ngày</p>
       </div>
     </div>
   );
@@ -107,7 +105,7 @@ const ConversationStatistic = () => {
   return (
     <div className="bg-gray-50 min-h-screen p-8">
       <div className="container mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+        <h1 className="text-3xl font-bold text-blue-800 mb-8 text-center whitespace-nowrap">
           Các thông số về cuộc trò chuyện
         </h1>
 

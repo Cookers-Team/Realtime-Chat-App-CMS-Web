@@ -45,28 +45,35 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
         <h2 className="text-2xl font-bold text-center mb-6">Đăng nhập</h2>
-        <InputField
-          title="Tài khoản đăng nhập"
-          isRequire={true}
-          placeholder="Nhập email, SĐT hoặc MSSV"
-          onChangeText={(value: any) => handleChange("username", value)}
-          value={form.username}
-          icon={UserCircleIcon}
-          error={errors.username}
-        />
-        <InputField
-          title="Mật khẩu"
-          isRequire={true}
-          placeholder="Nhập mật khẩu"
-          onChangeText={(value: any) => handleChange("password", value)}
-          value={form.password}
-          icon={LockIcon}
-          secureTextEntry={!showPassword}
-          togglePassword={() => setShowPassword(!showPassword)}
-          showPassword={showPassword}
-          error={errors.password}
-        />
-        <Button title="ĐĂNG NHẬP" color="royalblue" onPress={handleSubmit} />
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            handleSubmit();
+          }}
+        >
+          <InputField
+            title="Tài khoản đăng nhập"
+            isRequire={true}
+            placeholder="Nhập email, SĐT hoặc MSSV"
+            onChangeText={(value: any) => handleChange("username", value)}
+            value={form.username}
+            icon={UserCircleIcon}
+            error={errors.username}
+          />
+          <InputField
+            title="Mật khẩu"
+            isRequire={true}
+            placeholder="Nhập mật khẩu"
+            onChangeText={(value: any) => handleChange("password", value)}
+            value={form.password}
+            icon={LockIcon}
+            secureTextEntry={!showPassword}
+            togglePassword={() => setShowPassword(!showPassword)}
+            showPassword={showPassword}
+            error={errors.password}
+          />
+          <Button title="ĐĂNG NHẬP" color="royalblue" onPress={handleSubmit} />
+        </form>
       </div>
       <LoadingDialog isVisible={loading} />
       <ToastContainer />

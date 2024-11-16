@@ -164,7 +164,7 @@ const UserStatistic = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-8">
       <div className="container mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+          <h1 className="whitespace-nowrap text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
             Các thông số về người dùng
           </h1>
           <p className="text-gray-600 mt-2">

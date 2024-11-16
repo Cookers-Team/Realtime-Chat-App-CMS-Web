@@ -9,9 +9,11 @@ import SelectBox from "../components/SelectBox";
 import { CheckIcon, XIcon } from "lucide-react";
 import { settingKey } from "../types/constant";
 import UpdateSetting from "../components/setting/UpdateSetting";
+import { useGlobalContext } from "../types/context";
 
-const Setting = ({ profile }: any) => {
+const Setting = () => {
   const [data, setData] = useState([]);
+  const { profile } = useGlobalContext();
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [settingId, setSettingId] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);

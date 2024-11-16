@@ -138,7 +138,7 @@ const PostStatistics = () => {
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="container mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          <h1 className="text-3xl font-bold text-blue-800 mb-2  whitespace-nowrap">
             Các thông số về bài đăng
           </h1>
           <p className="text-gray-600">

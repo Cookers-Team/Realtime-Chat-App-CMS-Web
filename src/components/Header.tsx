@@ -13,7 +13,7 @@ const Header = ({
       {onSearch && (
         <button
           onClick={onSearch}
-          className="bg-blue-600 hover:bg-blue-900 text-white border p-2 rounded-lg flex items-center mr-2"
+          className="bg-blue-600 hover:bg-blue-900 text-white border p-2 rounded-lg flex items-center mr-2 whitespace-nowrap"
         >
           <SearchIcon size={20} />
           <span className="ml-1">Tìm kiếm</span>

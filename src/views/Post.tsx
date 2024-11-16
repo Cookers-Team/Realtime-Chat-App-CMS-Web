@@ -12,8 +12,6 @@ import { toast } from "react-toastify";
 import PostDetail from "../components/post/PostDetail";
 import Breadcrumb from "../components/Breadcrumb";
 import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
   CircleCheckBigIcon,
   CircleXIcon,
   ClockIcon,
@@ -28,8 +26,10 @@ import {
 import Sidebar from "../components/Sidebar";
 import PostReview from "../components/post/PostReview";
 import userImg from "../assets/user_icon.png";
+import { useGlobalContext } from "../types/context";
 
-const Post = ({ profile }: any) => {
+const Post = () => {
+  const { profile } = useGlobalContext();
   const { isDialogVisible, showDialog, hideDialog } = useDialog();
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [createModalVisible, setCreateModalVisible] = useState(false);
@@ -55,6 +55,7 @@ const Post = ({ profile }: any) => {
             className="w-8 h-8 rounded-full"
           />
           <span>{item.user.displayName}</span>
+          <span></span>
         </span>
       ),
     },

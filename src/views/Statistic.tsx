@@ -6,7 +6,7 @@ import UserStatistic from "../components/statistic/UserStatistic";
 import ConversationStatistic from "../components/statistic/ConversationStatistic";
 import PostStatistic from "../components/statistic/PostStatistic";
 
-const Statistic = ({ profile }: any) => {
+const Statistic = () => {
   const [searchValues, setSearchValues] = useState({
     category: "0",
   });

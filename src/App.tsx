@@ -9,10 +9,11 @@ import Post from "./views/Post";
 import Role from "./views/Role";
 import Statistic from "./views/Statistic";
 import Setting from "./views/Setting";
+import { useGlobalContext } from "./types/context";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [profile, setProfile] = useState(null);
+  const { setProfile } = useGlobalContext();
   const { get, post, loading } = useFetch();
 
   useEffect(() => {
@@ -44,17 +45,11 @@ const App = () => {
             <Routes>
               {isAuthenticated ? (
                 <>
-                  <Route path="/" element={<User profile={profile} />} />
-                  <Route path="/post" element={<Post profile={profile} />} />
-                  <Route
-                    path="/statistic"
-                    element={<Statistic profile={profile} />}
-                  />
-                  <Route
-                    path="/setting"
-                    element={<Setting profile={profile} />}
-                  />
-                  <Route path="/role" element={<Role profile={profile} />} />
+                  <Route path="/" element={<User />} />
+                  <Route path="/post" element={<Post />} />
+                  <Route path="/statistic" element={<Statistic />} />
+                  <Route path="/setting" element={<Setting />} />
+                  <Route path="/role" element={<Role />} />
                 </>
               ) : (
                 <>
