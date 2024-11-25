@@ -1,5 +1,11 @@
 ## CMS - Zalo UTE
 
+This project serves as the content management system (CMS) for the Zalo UTE application. For the backend API repository, refer to the link below:
+
+**API Repository**: [Zalo UTE API](https://github.com/The-Cookies-Team/Realtime-Chat-App-API)
+
+---
+
 ## Installation
 
 ```sh
