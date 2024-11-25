@@ -8,6 +8,8 @@ This project serves as the content management system (CMS) for the Zalo UTE appl
 
 ## Installation
 
+To install the dependencies for the project, run the following command:
+
 ```sh
 npm install
 ```
